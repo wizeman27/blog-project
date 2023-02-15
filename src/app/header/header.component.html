@@ -1,0 +1,38 @@
+<p>
+  <mat-toolbar color="">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu button">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>assignment</mat-icon>
+        <span>Philosophy</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>donut_large</mat-icon>
+        <span>Theology</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>flight_takeoff</mat-icon>
+        <span>Essays</span>
+      </button>
+      <hr>
+      <button mat-menu-item disabled>
+        <mat-icon>info</mat-icon>
+        <span>About Us</span>
+      </button>
+    </mat-menu>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>TKS blog</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Search button">
+      <mat-icon>search</mat-icon>
+    </button>
+    <button mat-icon-button class="example-icon" aria-label="Account avatar button">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar>
+</p>
