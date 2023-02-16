@@ -1,0 +1,75 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+/* ======== Angular material custom themes ======== */
+$my-custom-primary: mat.define-palette(mat.$deep-purple-palette);
+$my-custom-accent: mat.define-palette(mat.$pink-palette, 100, 500, A100);
+$my-custom-warn: mat.define-palette(mat.$lime-palette);
+$my-custom-theme: mat.define-light-theme(
+  (
+ color: (
+   primary: $my-custom-primary,
+   accent: $my-custom-accent,
+   warn: $my-custom-warn),
+ typography: mat.define-typography-config(
+  $font-family:'"Poppins",sans-serif'
+ ),
+ density: 0,
+));
+@include mat.all-component-themes($my-custom-theme);
+
+
+// how do I implement these?
+
+$mdc-typography-styles-headline1: (
+  font-family: unquote("Poppins"),
+  font-size: 93
+);
+$mdc-typography-styles-headline2: (
+  font-family: unquote("Poppins"),
+  font-size: 58
+);
+$mdc-typography-styles-headline3: (
+  font-family: unquote("Poppins"),
+  font-size: 47
+);
+$mdc-typography-styles-headline4: (
+  font-family: unquote("Poppins"),
+  font-size: 33
+);
+$mdc-typography-styles-headline5: (
+  font-family: unquote("Poppins"),
+  font-size: 23
+);
+$mdc-typography-styles-headline6: (
+  font-family: unquote("Poppins"),
+  font-size: 19
+);
+$mdc-typography-styles-body1: (
+  font-family: unquote("Nunito"),
+  font-size: 17
+);
+$mdc-typography-styles-body2: (
+  font-family: unquote("Nunito"),
+  font-size: 15
+);
+$mdc-typography-styles-subtitle1: (
+  font-family: unquote("Poppins"),
+  font-size: 16
+);
+$mdc-typography-styles-subtitle2: (
+  font-family: unquote("Poppins"),
+  font-size: 14
+);
+$mdc-typography-styles-button: (
+  font-family: unquote("Nunito"),
+  font-size: 15
+);
+$mdc-typography-styles-overline: (
+  font-family: unquote("Nunito"),
+  font-size: 11
+);
+$mdc-typography-styles-caption: (
+  font-family: unquote("Nunito"),
+  font-size: 13
+);

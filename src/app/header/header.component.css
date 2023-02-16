@@ -1,3 +1,27 @@
 .example-spacer {
   flex: 1 1 auto;
 }
+
+.menu-icon {
+  transform: scale(1.5);
+  margin-right: 24px;
+  margin-left: 10px;
+}
+
+.search-icon {
+  transform: scale(1.5);
+  margin-right: 10px;
+}
+
+.account-icon {
+  transform: scale(1.5);
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+h1 {
+  margin-left: 24px;
+  font-family: 'PT Sans';
+  font-weight: 700;
+  font-size: 36px;
+}

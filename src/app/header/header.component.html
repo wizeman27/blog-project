@@ -1,6 +1,12 @@
 <p>
-  <mat-toolbar color="">
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu button">
+  <mat-toolbar color="primary" class="mat-typography">
+    <h1>TKS blog</h1>
+    <span class="example-spacer"></span>
+    <button mat-icon-button aria-label="Search button" class="search-icon">
+      <mat-icon>search</mat-icon>
+    </button>
+    <span>&nbsp;</span>
+    <button mat-icon-button class="menu-icon" [matMenuTriggerFor]="menu" aria-label="Menu button">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -22,17 +28,6 @@
         <span>About Us</span>
       </button>
     </mat-menu>
-    <span>&nbsp;</span>
-    <span>&nbsp;</span>
-    <span>&nbsp;</span>
-    <span>&nbsp;</span>
-    <span>TKS blog</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Search button">
-      <mat-icon>search</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon" aria-label="Account avatar button">
-      <mat-icon>account_circle</mat-icon>
-    </button>
+
   </mat-toolbar>
 </p>
