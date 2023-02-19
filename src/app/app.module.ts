@@ -46,7 +46,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
-    MatCardModule
+    MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
