@@ -1,0 +1,60 @@
+.banner {
+  background-image: url("src/assets/images/ember-navarro-ji7hV7yCiJc-unsplash.jpg");
+  background-color: purple;
+  color: whitesmoke;
+  text-align: left;
+  animation: banner-anim 40s infinite;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  background-attachment: local;
+  display: flex-rows;
+  height: 600px;
+}
+
+.hero-title {
+  font-family: "Poppins";
+  font-size: 48px;
+  font-weight: 800;
+  padding-left: 20%;
+  padding-right: 5%;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.hero-content {
+  font-family: "PT Sans";
+  font-size: 24px;
+  font-weight: 400;
+  padding-left: 20%;
+  padding-right: 5%;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+@keyframes banner-anim {
+  0% {
+    background-image: url("src/assets/images/ember-navarro-ji7hV7yCiJc-unsplash.jpg");
+  }
+  25% {
+    background-image: url("src/assets/images/constantinos-kollias-nESI7TqYBto-unsplash.jpg");
+  }
+  50% {
+    background-image: url("src/assets/images/jr-korpa-taKCAaRUVV8-unsplash.jpg");
+  }
+  75% {
+    background-image: url("src/assets/images/elia-pellegrini-CrEpcul4DZ0-unsplash.jpg");
+  }
+  100% {
+    background-image: url("src/assets/images/alex-gruber-Id5TkpFVAws-unsplash.jpg");
+  }
+
+
+}
+
+@media (max-width: 375px) {
+  .hero-title {
+    font-size: 36px;
+  }
+  .hero-content {
+    font-size: 18px;
+  }
+}

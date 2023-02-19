@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-hero-banner',
@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./hero-banner.component.css']
 })
 export class HeroBannerComponent {
+  title: string = "A SPRING OF KNOWLEDGE";
+  content: string = "Something New to Learn Every Day";
+
+
+
+
 
 }
