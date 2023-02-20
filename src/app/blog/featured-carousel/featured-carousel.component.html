@@ -1,18 +1,42 @@
 <div class="slider-header">
   <h3>Featured Articles</h3>
-  <a routerLink="">See all</a>
+  <a routerLink="blogs/featured">See all</a>
 </div>
+
 <div class="scrolling-wrapper-flexbox">
-  <mat-card class="card" *ngFor="let card of featuredBlogs; let i = index" [class.active]="currentIndex === i">
+  <!-- <mat-card class="card" *ngFor="let card of featuredBlogs; let i = index">
     <mat-card-header>
       <div class="card-header">
-        <mat-card-title>{{ card.title }}</mat-card-title>
+        <a [routerLink]='[i]'>
+          <mat-card-title class="">{{ card.title }}</mat-card-title>
+        </a>
         <mat-card-subtitle>{{ card.author.fullName }}</mat-card-subtitle>
       </div>
     </mat-card-header>
     <mat-card-content>
-      {{ card.quotes[0] }}
-      <img mat-card-image src="{{card.imagePath}}" alt="{{card.title}}" class="card-image">
+      <div class="">{{ card.description }}</div>
+      <a [routerLink]='[i]'>
+        <img mat-card-image src="{{card.imagePath}}" alt="{{card.title}}" class="card-image">
+      </a>
+    </mat-card-content>
+  </mat-card> -->
+  <mat-card class="card" *ngFor="let card of featuredBlogs; let i = index">
+    <mat-card-header>
+      <div class="blog-link" routerLink="{{card.address}}">
+      <mat-card-title-group>
+        <mat-card-title class="giveMeEllipsisTitle">{{ card.title }}</mat-card-title>
+        <mat-card-subtitle>{{ card.author.fullName }}</mat-card-subtitle>
+        <img mat-card-md-image src="{{ card.imagePath }}" alt="{{ card.title }}">
+      </mat-card-title-group>
+    </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="giveMeEllipsisDescription">
+      {{ card.description }}
+    </div>
     </mat-card-content>
   </mat-card>
 </div>
+
+

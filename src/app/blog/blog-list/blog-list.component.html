@@ -1,23 +1,54 @@
-<mat-card class="example-card" *ngFor="let blog of blogs" (click)="onClick()">
-  <mat-card-header>
-    <div mat-card-avatar class="example-header-image" ></div>
-    <mat-card-title>{{blog.title}}</mat-card-title>
-    <mat-card-subtitle>{{blog.author.fullName}}</mat-card-subtitle>
-    <img mat-card-image src="{{blog.imagePath}}" alt="{{blog.title}}" class="card-image">
-  </mat-card-header>
+<div class="bloglist-header">
+  <h3>Blogs</h3>
+  <a routerLink="blogs">See all</a>
+</div>
 
-  <mat-card-content>
-    <p>
-      {{blog.quotes[0]}}
-    </p>
-      <p>
-      {{blog.quotes[1]}}
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button type="button" mat-button>LIKE</button>
-    <button type="button" mat-button>SHARE</button>
+<div class="filter-chips">
+  <mat-chip-listbox multiple aria-label="Filter by tags">
+    <mat-chip-option *ngFor="let tag of tagsList" [value]="tag" (click)="filterByTag(tag)">{{tag}}</mat-chip-option>
+  <button mat-flat-button (click)="onShowHideTags()">{{tagsExpanded ? 'Show less tags' : 'Show all tags'}}</button>
+  </mat-chip-listbox>
+  <div class="clear-button">
+    <button mat-fab color="accent" aria-label="Clear filters" (click)="onClearFilters()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>
 
-    <span class="datestamp">&nbsp; {{blog.publishedDate | date:'mediumDate'}}</span>
-  </mat-card-actions>
-</mat-card>
+<div class="action-buttons">
+  <button mat-flat-button color="warn" (click)="accordion.openAll()">Expand All</button>
+  <button mat-flat-button color="warn" (click)="accordion.closeAll()">Collapse All</button>
+</div>
+
+<mat-accordion multi="true">
+  <mat-expansion-panel hideToggle *ngFor="let blog of blogs">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3>{{blog.title}}</h3>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="post-image">
+      <img src="{{blog.imagePath}}" alt="{{blog.title}}" routerLink="{{blog.address}}">
+    </div>
+    <p class="description">{{blog.description}}</p>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <hr>
+      <p>Tags</p>
+      <div class="left-side">
+        <mat-chip-listbox aria-label="Tags">
+          <div *ngFor="let tag of blog.tags">
+            <mat-chip>{{tag}}</mat-chip>
+          </div>
+        </mat-chip-listbox>
+      </div>
+    </div>
+    <mat-action-row>
+      <a mat-flat-button color="primary" routerLink="{{blog.address}}">Read the full article</a>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="action-buttons">
+  <button mat-flat-button color="warn" (click)="accordion.openAll()">Expand All</button>
+  <button mat-flat-button color="warn" (click)="accordion.closeAll()">Collapse All</button>
+</div>

@@ -1,0 +1,54 @@
+<div class="article-detail">
+  <div class="row">
+    <div class="widecolumn">
+
+
+      <div class="main-content">
+        <h1>{{blog.title}}</h1>
+        <h6>{{blog.author.fullName}}</h6>
+        <div class="image">
+          <img src="{{blog.imagePath}}" alt="{{blog.title}}">
+        </div>
+        <div class="main-text" *ngFor="let section of blog.sections">
+          <h3>{{section.sectionTitle}}</h3>
+          <p>{{section.sectionText}}</p>
+        </div>
+        <p>Published on {{blog.publishedDate}}</p>
+        <p>Category: {{blog.category}}</p>
+        <p>Tags:</p>
+        <mat-chip-listbox aria-label="Tags">
+          <div *ngFor="let tag of blog.tags">
+            <mat-chip>{{tag}}</mat-chip>
+          </div>
+        </mat-chip-listbox>
+
+
+        <h2>Comments</h2>
+        <mat-card *ngFor="let comment of blog.comments">
+          <mat-card-header>
+            <mat-card-title>{{comment.commentText}}</mat-card-title>
+            <mat-card-subtitle class="comment-subtitle">
+              <span class="comment-author">{{comment.commentAuthor.fullName}}</span>
+              <span class="comment-date">{{comment.commentDate | date: 'shortDate'}}</span>
+            </mat-card-subtitle>
+
+          </mat-card-header>
+
+          <mat-card-actions align="end">
+            <button mat-button>Like</button>
+            <button mat-button>Report</button>
+          </mat-card-actions>
+        </mat-card>
+        <p>Comment form goes here</p>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="contents-panel">
+        <div  *ngFor="let section of blog.sections">
+          <div class="section-links">{{section.sectionTitle}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

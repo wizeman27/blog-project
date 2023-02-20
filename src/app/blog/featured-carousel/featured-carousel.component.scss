@@ -1,12 +1,18 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+  margin-left: 10%;
+}
+
 .scrolling-wrapper-flexbox {
   display: flex;
 
   overflow-x: auto;
 
-  .card {
-    flex: 0 0 auto;
-    margin-right: 3px;
-  }
+  // .card {
+  //   flex: 0 0 auto;
+  //   margin-right: 3px;
+  // }
 }
 
 .scrolling-wrapper-flexbox {
@@ -23,23 +29,80 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
-.card-image {
-  max-height: 200px;
-  max-width: 200px;
+// .card-image {
+//   max-height: 200px;
+//   max-width: 200px;
+// }
+
+// .title {
+//   display: inline-block;
+//   max-width: 400px;
+//   height: 1.5em;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .description {
+//   // text-justify: auto;
+
+//   //display: inline-block;
+//   max-width: 250px;
+//   line-height: 1.5em;
+//   height: 15em;
+//   word-wrap: break-word;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+.giveMeEllipsisDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 9em; /* fallback */
+  margin-top:.5em;
 }
 
-@media (max-width: 768px) {
-  .card {
-    flex: 0 0 calc(50% - 2rem);
-  }
+.giveMeEllipsisTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 4.5em; /* fallback */
+  margin-right: .5em;
+  font-weight:400;
 }
 
-@media (max-width: 576px) {
-  .card {
-    flex: 0 0 calc(100% - 2rem);
-  }
+.card {
+  max-width: 500px;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
 }
+
+.blog-link {cursor: pointer;}
+
+// @media (max-width: 768px) {
+//   .example-card {
+//     max-width: 500px;
+//     margin-bottom: 8px;
+//     margin-right: 3px;
+//   }
+// }
+
+// @media (max-width: 576px) {
+//   .example-card {
+//     max-width: 500px;
+//     margin-bottom: 8px;
+//     margin-right: 3px;
+//   }
+// }

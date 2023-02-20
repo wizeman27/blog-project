@@ -24,6 +24,7 @@ h1 {
   font-family: "PT Sans";
   font-weight: 700;
   font-size: 36px;
+  cursor: pointer;
 }
 
 /* .sticky {
@@ -33,7 +34,7 @@ h1 {
   right: 0;
   z-index: 999;
 } */
-
+/*
 .sticky {
   position: fixed;
   width: 100%;
@@ -43,7 +44,8 @@ h1 {
   height: 60px;
   padding: 0px 30px;
 }
-
+this makes the header display when scrolling up, but it sometimes displays behind other cards
+*/
 mat-toolbar {
   position: relative;
   height: 60px;
