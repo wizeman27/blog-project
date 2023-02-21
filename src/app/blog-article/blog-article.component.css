@@ -58,7 +58,7 @@
 }
 
 .contents-panel {
-  margin-top: 6rem;
+  margin-top: 1rem;
   margin-left: 1rem;
   position:fixed;
   bottom:5;
@@ -74,4 +74,15 @@
   .column {
     display: none;
   }
+}
+
+.featured-carousel {
+  margin-right: auto;
+
+}
+
+.carousel-container {
+  display: inline-flex;
+  justify-content: left;
+  margin-right: 10%;
 }

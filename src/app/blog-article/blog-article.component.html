@@ -23,6 +23,7 @@
         </mat-chip-listbox>
 
 
+
         <h2>Comments</h2>
         <mat-card *ngFor="let comment of blog.comments">
           <mat-card-header>
@@ -40,14 +41,23 @@
           </mat-card-actions>
         </mat-card>
         <p>Comment form goes here</p>
+        <hr>
+        <div class="carousel-container">
+          <div class="featured-carousel">
+            <h2>For your next read</h2>
+            <p>A carousel of max 3 cards (with similar tags)</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <div class="column">
       <div class="contents-panel">
-        <div  *ngFor="let section of blog.sections">
+        <div *ngFor="let section of blog.sections">
           <div class="section-links">{{section.sectionTitle}}</div>
         </div>
+        <button mat-button color="warn" routerLink="edit">Edit post</button>
       </div>
     </div>
   </div>

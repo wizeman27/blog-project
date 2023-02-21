@@ -1,0 +1,44 @@
+/* .mat-stepper-horizontal {
+
+} */
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+
+.mat-form-field {
+  max-width: 1200px;
+}
+
+.title {
+  margin-left: 10%;
+}
+
+
+.blogform-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.blogform-buttons button {
+  margin-right: 1rem;
+  margin-left: 1 rem;
+}
+
+.blog-form {
+  display: block;
+  align-items: normal;
+  justify-content: left;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 5%;
+  margin-left: 5%;
+
+}
+
+.chip-list {
+  width: 100%;
+}

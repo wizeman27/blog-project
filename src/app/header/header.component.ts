@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +8,6 @@ import {
 export class HeaderComponent {
   // scrolledUp = false;
   // currentPosition = window.scrollY;
-
   // @HostListener('window:scroll', [])
   // onWindowScroll() {
   //   let scroll = window.scrollY;
@@ -30,6 +23,4 @@ export class HeaderComponent {
   //     this.scrolledUp = false;
   //   }
   // }
-
-
 }

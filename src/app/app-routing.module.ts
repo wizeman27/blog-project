@@ -9,7 +9,6 @@ import { BlogComponent } from './blog/blog.component';
 
 const routes: Routes = [
   // { path: '', redirectTo: '/blogs', pathMatch: 'full' },
-  { path:'', component: BlogComponent},
 
   { path: 'new', component: BlogEditComponent },
 
@@ -27,12 +26,19 @@ const routes: Routes = [
     component: AuthComponent,
     children: [{ path: 'profile', component: UserProfileComponent }],
   },
-  { path: ':address', component: BlogArticleComponent},
+  { path: ':address/edit', component: BlogEditComponent },
+  {
+    path: ':address',
+    component: BlogArticleComponent,
+  },
+  { path: '', component: BlogComponent },
   { path: '**', redirectTo: '' }, // Keep this in last place!
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
+  imports: [
+    RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
