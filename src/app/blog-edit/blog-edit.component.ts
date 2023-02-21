@@ -76,11 +76,15 @@ export class BlogEditComponent implements OnInit {
       featured: new FormControl(blogFeatured, Validators.required),
       address: new FormControl(blogAddress, Validators.required),
     });
+
+    this.blogRequiredFields.get("title").valueChanges.subscribe((change)=>this.blogRequiredFields.get("address").setValue(change && change.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    .map(x => x.toLowerCase())
+    .join('-')));
     this.blogText = new FormGroup({
       sections: new FormArray([]),
     });
 
-    //this.onAddSection();
+
 
     this.blogOptionalFields = this._formBuilder.group({
       imagePath: new FormControl(blogImagePath),
@@ -135,7 +139,9 @@ export class BlogEditComponent implements OnInit {
     console.log(this.blogOptionalFields.value);
     console.log(this.blogReview.value);
   }
+
   onSubmit() {
+    console.log('form submitted.')
     console.log(this.blogRequiredFields.value);
     console.log(this.blogText.value);
     console.log(this.blogOptionalFields.value);
@@ -186,4 +192,6 @@ export class BlogEditComponent implements OnInit {
       this.tags[index].name = value;
     }
   }
+
+
 }

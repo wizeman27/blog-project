@@ -1,7 +1,5 @@
 <h2 class="title">{{editMode ? 'Edit Post' : 'New Post'}}</h2>
 
-
-
 <div class="blog-form">
   <mat-stepper [linear]=false #stepper>
     <mat-step [stepControl]="blogRequiredFields">
@@ -41,7 +39,7 @@
         </p>
 
         <div>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button type="button" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -72,8 +70,8 @@
         </div>
         <hr>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button type="button" matStepperPrevious>Back</button>
+          <button mat-button type="button" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -129,7 +127,7 @@
               <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)" [editable]="true"
                 (edited)="edit(tag, $event)" [aria-description]="'press enter to edit ' + tag.name">
                 {{tag.name}}
-                <button matChipRemove [attr.aria-label]="'remove ' + tag.name">
+                <button type="button" matChipRemove [attr.aria-label]="'remove ' + tag.name">
                   <mat-icon>cancel</mat-icon>
                 </button>
               </mat-chip-row>
@@ -142,8 +140,8 @@
         </p>
 
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button type="button" matStepperPrevious>Back</button>
+          <button mat-button type="button" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -152,16 +150,17 @@
         <ng-template matStepLabel>Preview your post</ng-template>
         <mat-form-field appearance="fill">
           <mat-label>preview</mat-label>
-          <input matInput formControlName="thirdCtrl" placeholder="let's display a preview of the info collected so far" required>
+          <input matInput formControlName="thirdCtrl" placeholder="let's display a preview of the info collected so far"
+            required>
         </mat-form-field>
-        <div class="blogform-buttons" (ngSubmit)="onSubmit()">
-          <button type="submit" mat-raised-button color="primary">Publish</button>
+        <div class="blogform-buttons">
+          <button type="submit" mat-raised-button color="primary" (click)="onSubmit()">Publish</button>
           <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save as Draft</button>
           <button type="button" mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
         </div>
         <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button mat-button type="button" matStepperPrevious>Back</button>
+          <button mat-button type="button" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -169,12 +168,10 @@
       <ng-template matStepLabel>Done</ng-template>
       <p>You are now done.</p>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+        <button mat-button type="button" (click)="stepper.reset()">Reset</button>
       </div>
     </mat-step>
   </mat-stepper>
+  <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save as Draft</button>
 </div>
-
-
-
