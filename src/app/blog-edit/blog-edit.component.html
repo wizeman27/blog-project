@@ -1,14 +1,16 @@
 <h2 class="title">{{editMode ? 'Edit Post' : 'New Post'}}</h2>
 
 <div class="blog-form">
-  <mat-stepper [linear]=false #stepper>
+  <mat-stepper orientation="vertical" [linear]=true #stepper>
+    <!-- First section - required fields -->
     <mat-step [stepControl]="blogRequiredFields">
       <form [formGroup]="blogRequiredFields">
         <ng-template matStepLabel>Please fill out required fields</ng-template>
+
         <p>
           <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
             <mat-label>Title</mat-label>
-            <input matInput type="text" placeholder="Pick a great title for your blog post!" formControlName="title"
+            <input matInput type="text" placeholder="Pick a great title for your post!" formControlName="title"
               required>
           </mat-form-field>
         </p>
@@ -29,10 +31,20 @@
         </p>
         <p>
           <mat-form-field appearance="fill">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category" required>
+              <div>
+                <mat-option *ngFor="let category of blogCategories" [value]="category">{{category}}</mat-option>
+              </div>
+            </mat-select>
+            <mat-hint align="start">Select a category</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill">
             <mat-label>Featured</mat-label>
             <mat-select formControlName="featured" required>
-              <mat-option value="option">Yes</mat-option>
-              <mat-option value="option">No</mat-option>
+              <mat-option value="option"  *ngFor="let option of blogFeaturedOptions" [value]="option" >{{option}}</mat-option>
             </mat-select>
             <mat-hint align="start">Is this a featured blog?</mat-hint>
           </mat-form-field>
@@ -43,6 +55,8 @@
         </div>
       </form>
     </mat-step>
+
+    <!-- Second section - blog text in sections -->
     <mat-step [stepControl]="blogText">
       <form [formGroup]="blogText">
         <ng-template matStepLabel>Add the main text here, in sections.</ng-template>
@@ -52,18 +66,29 @@
             <p>
               <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
                 <mat-label>Section title</mat-label>
-                <input matInput type="text" placeholder="This is the section title, e.g. Introduction"
+                <input matInput type="text" placeholder="Add the section title, e.g. Introduction (optional)"
                   formControlName="sectionTitle">
               </mat-form-field>
             </p>
             <p>
               <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
                 <mat-label>Section description</mat-label>
-                <textarea matInput type="text" rows="6" placeholder="This is the main text"
+                <textarea matInput type="text" rows="6" placeholder="Add the main text here"
                   formControlName="sectionDescription"></textarea>
               </mat-form-field>
             </p>
-            <button mat-stroked-button color="accent" type="button" (click)="onRemoveSection(i)">Remove section</button>
+            <p>
+              <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
+                <mat-label>Section image URL/path</mat-label>
+                <input matInput type="text"
+                  placeholder="Add a section image URL to display inline (optional)"
+                  formControlName="sectionImage">
+              </mat-form-field>
+            </p>
+            <div class="remove-button">
+              <button mat-stroked-button color="accent" type="button" (click)="onRemoveSection(i)">Remove
+                section</button>
+            </div>
           </div>
 
           <button mat-stroked-button color="primary" type="button" (click)="onAddSection()">Add section</button>
@@ -76,50 +101,36 @@
       </form>
     </mat-step>
 
-
-
+    <!-- Third section - blog optional fields -->
     <mat-step [stepControl]="blogOptionalFields">
       <form [formGroup]="blogOptionalFields">
         <ng-template matStepLabel>Please fill out optional fields</ng-template>
 
-
-
         <p>
           <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
-            <mat-label>Image URL/path</mat-label>
+            <mat-label>Hero image URL/path</mat-label>
             <input matInput type="text" placeholder="Add a hero image URL (will have a local upload button later)"
-              formControlName="imagePath">
+              formControlName="heroImage">
           </mat-form-field>
         </p>
-
 
         <div formArrayName="quotes">
           <div *ngFor="let quote of quotes.controls; let i=index" [formGroupName]="i">
             <p>
               <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
                 <mat-label>Quote</mat-label>
-                <input matInput type="text" placeholder="Add a quote to be highlighted from the blog."
-                  formControlName="quoteText">
+                <textarea matInput type="text" rows="2" placeholder="Add a quote to be highlighted from the blog."
+                  formControlName="quoteText"></textarea>
               </mat-form-field>
             </p>
-
-            <button mat-stroked-button color="accent" type="button" (click)="onRemoveQuote(i)">Remove quote</button>
+            <div class="remove-button">
+              <button mat-stroked-button color="accent" type="button" (click)="onRemoveQuote(i)">Remove quote</button>
+            </div>
           </div>
 
           <button mat-stroked-button color="primary" type="button" (click)="onAddQuote()">Add quote</button>
         </div>
 
-
-        <p>
-          <mat-form-field appearance="fill">
-            <mat-label>Category</mat-label>
-            <mat-select formControlName="category" required>
-              <mat-option value="option">Article</mat-option>
-              <mat-option value="option">Short story</mat-option>
-            </mat-select>
-            <mat-hint align="start">Select a category</mat-hint>
-          </mat-form-field>
-        </p>
         <p>
           <mat-form-field class="chip-list" appearance="fill">
             <mat-label>Tags</mat-label>
@@ -145,18 +156,19 @@
         </div>
       </form>
     </mat-step>
+    <!-- Fourth section - preview post -->
     <mat-step [stepControl]="blogReview">
       <form [formGroup]="blogReview">
         <ng-template matStepLabel>Preview your post</ng-template>
         <mat-form-field appearance="fill">
-          <mat-label>preview</mat-label>
-          <input matInput formControlName="thirdCtrl" placeholder="let's display a preview of the info collected so far"
-            required>
+          <mat-label>Preview</mat-label>
+          <input matInput formControlName="thirdCtrl" placeholder="Will display a preview of the info collected so far"
+            [style.width.px]="formFieldWidth">
         </mat-form-field>
         <div class="blogform-buttons">
-          <button type="submit" mat-raised-button color="primary" (click)="onSubmit()">Publish</button>
-          <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save as Draft</button>
-          <button type="button" mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
+
+          <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save Draft</button>
+
         </div>
         <div>
           <button mat-button type="button" matStepperPrevious>Back</button>
@@ -164,14 +176,22 @@
         </div>
       </form>
     </mat-step>
+    <!-- Maybe move the Publish button to this section? -->
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
       <p>You are now done.</p>
+      <div class="blogform-buttons">
+        <button type="submit" mat-raised-button color="primary" (click)="onSubmit()">Publish</button>
+      </div>
       <div>
         <button mat-button type="button" matStepperPrevious>Back</button>
         <button mat-button type="button" (click)="stepper.reset()">Reset</button>
       </div>
     </mat-step>
+
   </mat-stepper>
-  <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save as Draft</button>
+  <div class="blogform-buttons">
+    <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save as Draft</button>
+    <button type="button" mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
+  </div>
 </div>

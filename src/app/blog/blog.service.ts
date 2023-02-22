@@ -21,6 +21,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'rethinking-orientalism-and-the-politics-of-orientalist-art',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'Introduction',
@@ -88,7 +90,6 @@ export class BlogService {
           commentDate: new Date('February 19, 2023 17:06:00'),
         },
       ],
-      'Article',
       [
         'Orientalism',
         'Art',
@@ -112,6 +113,8 @@ export class BlogService {
       false,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-not-featured',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -131,7 +134,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Sprituality', 'Philosophy']
     ),
     new Blog(
@@ -141,6 +144,8 @@ export class BlogService {
       false,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title3',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -160,7 +165,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -170,6 +175,8 @@ export class BlogService {
       false,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title4',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -189,7 +196,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -199,6 +206,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured5',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -218,7 +227,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -228,6 +237,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured6',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -247,7 +258,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -257,6 +268,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured7',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -276,7 +289,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -286,6 +299,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured8',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -305,7 +320,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
     new Blog(
@@ -315,6 +330,8 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured9',
+      'Article',
+      'Published',
       [
         {
           sectionTitle: 'First section title',
@@ -334,7 +351,7 @@ export class BlogService {
           commentDate: new Date('January 3, 2022 09:24:00'),
         },
       ],
-      'Article',
+
       ['Tag1', 'Tag2']
     ),
   ];

@@ -15,20 +15,15 @@
   </div>
 </div>
 
-<div class="action-buttons">
-  <button mat-flat-button color="warn" (click)="accordion.openAll()">Expand All</button>
-  <button mat-flat-button color="warn" (click)="accordion.closeAll()">Collapse All</button>
-</div>
-
 <mat-accordion multi="true">
-  <mat-expansion-panel hideToggle *ngFor="let blog of blogs">
+  <mat-expansion-panel *ngFor="let blog of blogs" [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         <h3>{{blog.title}}</h3>
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="post-image">
-      <img src="{{blog.imagePath}}" alt="{{blog.title}}" routerLink="{{blog.address}}">
+      <img src="{{blog.heroImage}}" alt="{{blog.title}}" routerLink="{{blog.address}}">
     </div>
     <p class="description">{{blog.description}}</p>
     <div fxLayout="row" fxLayoutAlign="start center">

@@ -42,3 +42,12 @@
 .chip-list {
   width: 100%;
 }
+
+.remove-button {
+  display: flex;
+  justify-content: right;
+  text-align: right;
+  align-items: right;
+}
+
+

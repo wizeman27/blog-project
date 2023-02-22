@@ -86,3 +86,7 @@
   justify-content: left;
   margin-right: 10%;
 }
+.blogform-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
