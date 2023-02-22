@@ -44,7 +44,8 @@
           <mat-form-field appearance="fill">
             <mat-label>Featured</mat-label>
             <mat-select formControlName="featured" required>
-              <mat-option value="option"  *ngFor="let option of blogFeaturedOptions" [value]="option" >{{option}}</mat-option>
+              <mat-option value="option" *ngFor="let option of blogFeaturedOptions"
+                [value]="option">{{option}}</mat-option>
             </mat-select>
             <mat-hint align="start">Is this a featured blog?</mat-hint>
           </mat-form-field>
@@ -80,8 +81,7 @@
             <p>
               <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
                 <mat-label>Section image URL/path</mat-label>
-                <input matInput type="text"
-                  placeholder="Add a section image URL to display inline (optional)"
+                <input matInput type="text" placeholder="Add a section image URL to display inline (optional)"
                   formControlName="sectionImage">
               </mat-form-field>
             </p>
@@ -182,6 +182,8 @@
       <p>You are now done.</p>
       <div class="blogform-buttons">
         <button type="submit" mat-raised-button color="primary" (click)="onSubmit()">Publish</button>
+        <button type="button" mat-raised-button color="accent" (click)="onUnpublish()"
+          *ngIf="isPublished">Unpublish</button>
       </div>
       <div>
         <button mat-button type="button" matStepperPrevious>Back</button>

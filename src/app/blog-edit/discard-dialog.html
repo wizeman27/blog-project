@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>Discard changes?</h1>
+<h2 mat-dialog-title>Discard changes?</h2>
 <div mat-dialog-content>Are you sure you want to leave? Your changes haven't been saved.</div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Keep editing</button>
-  <button mat-button mat-dialog-close>Discard</button>
+<div mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close cdkFocusInitial color="primary" (click)="onCancel()">Keep editing</button>
+  <button mat-flat-button mat-dialog-close color="accent" (click)="onNavigate()">Discard changes</button>
 </div>

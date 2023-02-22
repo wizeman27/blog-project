@@ -30,7 +30,7 @@ import { FeaturedCarouselComponent } from './blog/featured-carousel/featured-car
 import { BlogArticleComponent } from './blog-article/blog-article.component';
 import { AuthComponent } from './auth/auth.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
-import { BlogEditComponent } from './blog-edit/blog-edit.component';
+import { BlogEditComponent, DiscardDialog } from './blog-edit/blog-edit.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 
 @NgModule({
@@ -48,6 +48,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     UserProfileComponent,
     BlogEditComponent,
     AboutUsComponent,
+    DiscardDialog
   ],
   imports: [
     BrowserModule,
@@ -69,5 +70,6 @@ import { AboutUsComponent } from './about-us/about-us.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
+  entryComponents: [DiscardDialog],
 })
 export class AppModule {}

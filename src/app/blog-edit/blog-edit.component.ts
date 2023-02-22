@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Injectable, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -7,20 +7,25 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
 import { BlogService } from '../blog/blog.service';
+import { ComponentCanDeactivate } from './pending-changes.guard';
 
 export interface BlogTag {
   name: string;
 }
 
+@Injectable({
+  providedIn: 'root',
+})
 @Component({
   selector: 'app-blog-edit',
   templateUrl: './blog-edit.component.html',
   styleUrls: ['./blog-edit.component.css'],
 })
-export class BlogEditComponent implements OnInit {
+export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   address: string;
   editMode = false;
   isLinear = false;
@@ -29,6 +34,7 @@ export class BlogEditComponent implements OnInit {
   blogReview: FormGroup;
   formFieldWidth: number;
   blogText: FormGroup;
+  isPublished: boolean;
   protected blogCategories = ['Article', 'Essay', 'Short story', 'First draft'];
   protected blogFeaturedOptions = ['Yes', 'No'];
 
@@ -37,7 +43,7 @@ export class BlogEditComponent implements OnInit {
     private blogService: BlogService,
     private router: Router,
     private _formBuilder: FormBuilder,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +55,6 @@ export class BlogEditComponent implements OnInit {
       this.initForm();
     });
     this.formFieldWidth = window.innerWidth * 0.8;
-
   }
 
   @HostListener('window:resize', ['$event'])
@@ -78,7 +83,7 @@ export class BlogEditComponent implements OnInit {
       blogDescription = blogPost.description;
       // Display default value in select dropdown for Featured
       if (blogPost.featured) {
-        blogPostFeatured = "Yes";
+        blogPostFeatured = 'Yes';
       } else {
         blogPostFeatured = 'No';
       }
@@ -102,22 +107,21 @@ export class BlogEditComponent implements OnInit {
         for (let tag of blogPost.tags) {
           this.tags.push({ name: tag });
         }
-
       }
       if (blogPost['sections']) {
         for (let section of blogPost.sections) {
           blogSections.push(
             new FormGroup({
               sectionTitle: new FormControl(section.sectionTitle),
-              sectionDescription: new FormControl(section.sectionText, Validators.required),
+              sectionDescription: new FormControl(
+                section.sectionText,
+                Validators.required
+              ),
               sectionImage: new FormControl(section.sectionImage),
             })
           );
         }
       }
-
-
-
     }
 
     // define the form template with 3 groups
@@ -130,9 +134,17 @@ export class BlogEditComponent implements OnInit {
     });
 
     // auto-fill URL address based on blog title
-    this.blogRequiredFields.get("title").valueChanges.subscribe((change)=>this.blogRequiredFields.get("address").setValue(change && change.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-    .map(x => x.toLowerCase())
-    .join('-')));
+    this.blogRequiredFields.get('title').valueChanges.subscribe((change) =>
+      this.blogRequiredFields.get('address').setValue(
+        change &&
+          change
+            .match(
+              /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+            )
+            .map((x) => x.toLowerCase())
+            .join('-')
+      )
+    );
     this.blogText = new FormGroup({
       sections: blogSections,
     });
@@ -146,6 +158,11 @@ export class BlogEditComponent implements OnInit {
     this.blogReview = this._formBuilder.group({
       thirdCtrl: [''],
     });
+
+    // Check if blog is already published
+    const blogPost= this.blogService.getBlog(this.address);
+    this.isPublished = blogPost.status === 'Published';
+
   }
 
   get sections() {
@@ -188,7 +205,27 @@ export class BlogEditComponent implements OnInit {
     this.dialog.open(DiscardDialog);
   }
 
-  onSaveDraft () {
+  subject = new Subject<boolean>();
+
+  // to guard against browser refresh, close, external link
+  @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | boolean {
+    // insert logic to check if there are pending changes here;
+    // returning true will navigate without confirmation
+    // returning false will show a confirm dialog before navigating away
+    if (
+      this.blogRequiredFields.dirty ||
+      this.blogText.dirty ||
+      this.blogOptionalFields.dirty ||
+      this.blogReview.dirty
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  onSaveDraft() {
     console.log(this.blogRequiredFields.value);
     console.log(this.blogText.value);
     console.log(this.blogOptionalFields.value);
@@ -196,7 +233,7 @@ export class BlogEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('form submitted.')
+    console.log('form submitted.');
     console.log(this.blogRequiredFields.value);
     console.log(this.blogText.value);
     console.log(this.blogOptionalFields.value);
@@ -206,6 +243,10 @@ export class BlogEditComponent implements OnInit {
   onCancel() {
     this.editMode = false;
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  onUnpublish() {
+    // change status to Draft
   }
 
   // Properties and methods for Tag chips
@@ -248,12 +289,28 @@ export class BlogEditComponent implements OnInit {
       this.tags[index].name = value;
     }
   }
-
-
 }
 
 @Component({
   selector: 'discard-dialog',
   templateUrl: 'discard-dialog.html',
 })
-export class DiscardDialog {}
+export class DiscardDialog {
+  constructor(
+    private edit: BlogEditComponent,
+    public dialogRef: MatDialogRef<DiscardDialog>
+  ) {}
+
+  onCancel() {
+    this.edit.subject.next(false);
+    this.dialogRef.close();
+  }
+  onNavigate() {
+    this.edit.subject.next(true);
+    this.dialogRef.close();
+    this.edit.blogRequiredFields.markAsPristine();
+    this.edit.blogText.markAsPristine();
+    this.edit.blogOptionalFields.markAsPristine();
+    this.edit.blogReview.markAsPristine();
+  }
+}
