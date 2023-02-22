@@ -26,4 +26,10 @@ export class BlogArticleComponent implements OnInit {
     )
 
   }
+
+  onDeletePost() {
+    // open a dialog that asks to confirm, then delete the post.
+
+
+  }
 }

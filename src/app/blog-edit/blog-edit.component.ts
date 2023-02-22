@@ -246,7 +246,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   }
 
   onUnpublish() {
-    // change status to Draft
+    // change post status to Draft
+    const blogPost = this.blogService.getBlog(this.address);
+    blogPost.status = 'Draft';
   }
 
   // Properties and methods for Tag chips
