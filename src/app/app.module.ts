@@ -27,7 +27,7 @@ import { BlogComponent } from './blog/blog.component';
 import { BlogListComponent } from './blog/blog-list/blog-list.component';
 import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { FeaturedCarouselComponent } from './blog/featured-carousel/featured-carousel.component';
-import { BlogArticleComponent } from './blog-article/blog-article.component';
+import { BlogArticleComponent, DeleteDialog } from './blog-article/blog-article.component';
 import { AuthComponent } from './auth/auth.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { BlogEditComponent, DiscardDialog } from './blog-edit/blog-edit.component';
@@ -48,7 +48,8 @@ import { AboutUsComponent } from './about-us/about-us.component';
     UserProfileComponent,
     BlogEditComponent,
     AboutUsComponent,
-    DiscardDialog
+    DiscardDialog,
+    DeleteDialog
   ],
   imports: [
     BrowserModule,
@@ -70,6 +71,6 @@ import { AboutUsComponent } from './about-us/about-us.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [DiscardDialog],
+  entryComponents: [DiscardDialog, DeleteDialog],
 })
 export class AppModule {}

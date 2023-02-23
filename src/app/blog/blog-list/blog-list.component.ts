@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
+import { Subscription } from 'rxjs';
 import { Blog } from '../blog.model';
 import { BlogService } from '../blog.service';
 
@@ -10,6 +11,7 @@ import { BlogService } from '../blog.service';
 })
 export class BlogListComponent implements OnInit {
   blogs: Blog[];
+  subscription: Subscription;
   isSelected: boolean = false;
   activeTags: string[] = [];
   activeColor: "blue";
@@ -22,6 +24,12 @@ export class BlogListComponent implements OnInit {
   ngOnInit() {
     this.blogs = this.blogService.getBlogs();
     this.tagsList= Array.from(this.blogService.getTags()).slice(0, 7);
+    this.subscription = this.blogService.blogsChanged.subscribe(
+      (blogs : Blog[]) => {
+        this.blogs = blogs;
+      }
+    );
+
   }
 
   onShowHideTags() {

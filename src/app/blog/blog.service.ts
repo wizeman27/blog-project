@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { User } from '../user.model';
 import { Blog } from './blog.model';
 
@@ -6,6 +7,10 @@ import { Blog } from './blog.model';
   providedIn: 'root',
 })
 export class BlogService {
+  blogsChanged = new Subject<Blog[]>();
+  tagsChanged = new Subject<Set<string>>();
+  featuredBlogsChanged = new Subject<Blog[]>();
+
   testUser: User = new User('Jack Tester', 'jack@tks.com', 'jacktester1');
   blogAuthor: User = new User(
     'Hakim Mermer',
@@ -176,7 +181,7 @@ export class BlogService {
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title4',
       'Article',
-      'Published',
+      'Draft',
       [
         {
           sectionTitle: 'First section title',
@@ -356,18 +361,15 @@ export class BlogService {
     ),
   ];
 
-  private featuredBlogs = this.blogs.filter((blog) => blog.featured);
-
-  private tags = new Set<string>();
-
   constructor() {}
 
   getBlogs(): Blog[] {
-    return this.blogs.slice();
+    // only show published posts
+    return this.blogs.filter((blog) => blog.status === 'Published');
   }
 
   getFeaturedBlogs(): Blog[] {
-    return this.featuredBlogs.slice();
+    return this.blogs.filter((blog) => blog.featured);
   }
 
   getBlog(address: string): Blog {
@@ -375,12 +377,22 @@ export class BlogService {
   }
 
   getTags(): Set<string> {
-    for (let b of this.blogs) {
-      for (let t of b.tags) {
-        this.tags.add(t);
-      }
-    }
-    return this.tags;
+    const arrayOfTags = this.blogs.map((t) => t.tags);
+
+    const combinedArray = [].concat(...arrayOfTags);
+    const tags = new Set(combinedArray);
+
+    // this.blogs.map(
+    //   function (e) {
+    //     return e.tags;
+    // ).forEach(t => tags.add(t));
+
+    // for (let b of this.blogs) {
+    //   for (let t of b.tags) {
+    //     tags.add(t);
+    //   }
+    // }
+    return tags;
   }
 
   getBlogsByTags(tags: string[]) {
@@ -395,5 +407,53 @@ export class BlogService {
       }
     });
     return filteredBlogs;
+  }
+
+  newBlog(blog: Blog) {
+    //finalBlog
+    this.blogs.push(blog);
+    this.blogsChanged.next(this.getBlogs());
+    this.tagsChanged.next(this.getTags());
+    if (blog.featured) {
+      this.featuredBlogsChanged.next(this.getFeaturedBlogs());
+    }
+
+  }
+
+  updateBlog(address: string, blog: Blog) {
+    const index = this.blogs.findIndex((i) => i.address === address);
+    console.log(index);
+    console.log(JSON.stringify(this.blogs[index]));
+    this.blogs[index] = blog;
+    this.blogsChanged.next(this.getBlogs());
+    this.tagsChanged.next(this.getTags());
+    if (blog.featured) {
+      this.featuredBlogsChanged.next(this.getFeaturedBlogs());
+    }
+  }
+
+  deleteBlog(address: string) {
+    // let index = this.blogs
+    //   .map(function (e) {
+    //     return e.address;
+    //   })
+    //   .indexOf(address);
+
+    // let index = myArray.findIndex( element => {
+    //   if (element.name === 'Maria') {
+    //     return true;
+    //   }
+    // });
+    console.log("Parameter "+address);
+    const index = this.blogs.findIndex(i => i.address === address);
+    console.log(index);
+    console.log(JSON.stringify(this.blogs[index]));
+    const isFeatured = this.blogs[index].featured;
+    this.blogs.splice(index, 1);
+    this.blogsChanged.next(this.getBlogs());
+    this.tagsChanged.next(this.getTags());
+    if (isFeatured) {
+      this.featuredBlogsChanged.next(this.getFeaturedBlogs());
+    }
   }
 }

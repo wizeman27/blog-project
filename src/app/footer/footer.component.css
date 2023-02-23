@@ -6,7 +6,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content:space-around;
+  justify-content: space-around;
   position: relative;
 }
 
@@ -35,23 +35,35 @@
   padding: 6px;
 }
 
-@media screen and (max-width: 765px) {
+@media screen and (max-width: 810px) {
   .right-side {
     position: relative;
     display: flex;
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
   }
 }
-@media screen and (max-width: 611px) {
+@media screen and (max-width: 730px) {
   .footer {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    height: 5.625rem;
+    height: 6rem;
   }
 }
 
-@media screen and (max-width: 430px) {
+@media screen and (max-width: 480px) {
+  .footer {
+    height: 8rem;
+  }
+  .wrapper {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .footer {
+    height: 10rem;
+  }
   .wrapper {
     flex-direction: column;
   }

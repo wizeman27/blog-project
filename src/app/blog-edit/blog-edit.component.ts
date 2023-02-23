@@ -10,7 +10,9 @@ import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { Blog } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
+import { User } from '../user.model';
 import { ComponentCanDeactivate } from './pending-changes.guard';
 
 export interface BlogTag {
@@ -35,6 +37,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   formFieldWidth: number;
   blogText: FormGroup;
   isPublished: boolean;
+  blogAuthor: User;
+  newPost: Blog;
+  newBlogFeatured: boolean;
+  formIsSubmitted = false;
   protected blogCategories = ['Article', 'Essay', 'Short story', 'First draft'];
   protected blogFeaturedOptions = ['Yes', 'No'];
 
@@ -55,6 +61,11 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.initForm();
     });
     this.formFieldWidth = window.innerWidth * 0.8;
+    this.blogAuthor = new User(
+      'Hakim Mermer',
+      'support@thekernelshop.com',
+      'hakimm'
+    );
   }
 
   @HostListener('window:resize', ['$event'])
@@ -160,9 +171,13 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     });
 
     // Check if blog is already published
-    const blogPost= this.blogService.getBlog(this.address);
-    this.isPublished = blogPost.status === 'Published';
 
+    if (this.editMode) {
+      const blogPost = this.blogService.getBlog(this.address);
+      this.isPublished = blogPost.status === 'Published';
+    } else {
+      this.isPublished = false;
+    }
   }
 
   get sections() {
@@ -214,10 +229,11 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     // returning true will navigate without confirmation
     // returning false will show a confirm dialog before navigating away
     if (
-      this.blogRequiredFields.dirty ||
-      this.blogText.dirty ||
-      this.blogOptionalFields.dirty ||
-      this.blogReview.dirty
+      (this.blogRequiredFields.dirty ||
+        this.blogText.dirty ||
+        this.blogOptionalFields.dirty ||
+        this.blogReview.dirty) &&
+      !this.formIsSubmitted
     ) {
       return false;
     } else {
@@ -230,14 +246,76 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     console.log(this.blogText.value);
     console.log(this.blogOptionalFields.value);
     console.log(this.blogReview.value);
+
+    if (this.editMode) {
+      //this.blogService.updateBlog(this.address, );
+    } else {
+      //this.blogService.newBlog();
+    }
   }
 
   onSubmit() {
+    const blogPost = this.blogService.getBlog(this.address);
     console.log('form submitted.');
     console.log(this.blogRequiredFields.value);
     console.log(this.blogText.value);
     console.log(this.blogOptionalFields.value);
     console.log(this.blogReview.value);
+
+    // change featured field into boolean
+    if (this.blogRequiredFields.value.featured === 'Yes') {
+      this.newBlogFeatured = true;
+    } else if (this.blogRequiredFields.value.featured === 'No') {
+      this.newBlogFeatured = false;
+    }
+    // change tags into array of strings
+    //const arraysSet:Set<string> = new Set(this.blogOptionalFields.value.tags);
+    //console.log();
+    //console.log();
+    // get comments if they exist
+    let blogComments: Array<{
+      commentText: string;
+      commentAuthor: User;
+      commentDate: Date;
+    }>;
+
+    if(this.editMode) {
+      if (blogPost.comments) {
+        blogComments = blogPost.comments;
+      }
+    }
+    console.log("Title:" +JSON.stringify(this.blogText.value.title));
+    console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
+    console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
+    console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.tags));
+
+    this.newPost = new Blog(
+      // We'll get the user info from auth component or local storage later
+      this.blogAuthor,
+      this.blogRequiredFields.value.title,
+      this.blogRequiredFields.value.description,
+      this.newBlogFeatured,
+      new Date(),
+      this.blogRequiredFields.value.address,
+      this.blogRequiredFields.value.category,
+      'Published',
+      // sections are not correctly generated
+      this.blogText.value.sections,
+      this.blogOptionalFields.value.heroImage,
+      // quotes are not correctly generated
+      this.blogOptionalFields.value.quotes,
+      blogComments,
+      // tags are not correctly generated
+      this.blogOptionalFields.value.tags
+    );
+
+    if (this.editMode) {
+      this.blogService.updateBlog(this.address, this.newPost);
+    } else {
+      this.blogService.newBlog(this.newPost);
+    }
+    this.formIsSubmitted = true;
+    this.onCancel();
   }
 
   onCancel() {
@@ -307,12 +385,21 @@ export class DiscardDialog {
     this.edit.subject.next(false);
     this.dialogRef.close();
   }
+
   onNavigate() {
     this.edit.subject.next(true);
     this.dialogRef.close();
-    this.edit.blogRequiredFields.markAsPristine();
-    this.edit.blogText.markAsPristine();
-    this.edit.blogOptionalFields.markAsPristine();
-    this.edit.blogReview.markAsPristine();
+    if (this.edit.blogRequiredFields) {
+      this.edit.blogRequiredFields.markAsPristine();
+    }
+    if (this.edit.blogText) {
+      this.edit.blogText.markAsPristine();
+    }
+    if (this.edit.blogOptionalFields) {
+      this.edit.blogOptionalFields.markAsPristine();
+    }
+    if (this.edit.blogReview) {
+      this.edit.blogReview.markAsPristine();
+    }
   }
 }

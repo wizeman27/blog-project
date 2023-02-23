@@ -1,7 +1,7 @@
 <h2 class="title">{{editMode ? 'Edit Post' : 'New Post'}}</h2>
 
-<div class="blog-form">
-  <mat-stepper orientation="vertical" [linear]=true #stepper>
+<div class="blog-form" >
+  <mat-stepper orientation="vertical" [linear]=false #stepper>
     <!-- First section - required fields -->
     <mat-step [stepControl]="blogRequiredFields">
       <form [formGroup]="blogRequiredFields">
