@@ -1,0 +1,8 @@
+<div class="edit-dialog">
+  <h1 mat-dialog-title>Do you want to continue editing?</h1>
+  <div mat-dialog-content>This post has an unpublished draft. Do you want to continue editing the latest draft?</div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="onCancel()">Edit published version</button>
+    <button mat-button mat-dialog-close color="accent" (click)="onConfirm()">Continue editing</button>
+  </div>
+  </div>

@@ -10,6 +10,7 @@ import { BlogService } from '../blog/blog.service';
 
 export interface DialogData {
   address: string;
+  route: ActivatedRoute;
 }
 
 @Component({
@@ -24,7 +25,8 @@ export class BlogArticleComponent implements OnInit {
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +42,21 @@ export class BlogArticleComponent implements OnInit {
     this.dialog.open(DeleteDialog, {
       data: { address: this.address },
     });
+  }
+
+  onEdit() {
+    // if post has a draft that is more recent than published version,
+    if(this.blog.draft) {
+      if (this.blog.draft.lastSavedDate > this.blog.publishedDate) {
+        // check if user wants to load latest draft or published version.
+        this.dialog.open(EditDialog, {
+          data: { address: this.address, route: this.route },
+        });
+      }
+    }
+    else {
+      this.router.navigate(['./edit'], {relativeTo: this.route});
+    }
   }
 }
 
@@ -57,7 +74,7 @@ export class DeleteDialog {
   ) {}
 
   onDelete() {
-    console.log(this.data.address);
+    // console.log(this.data.address);
     if (this.data.address) {
       this.blogService.deleteBlog(this.data.address);
     }
@@ -67,5 +84,26 @@ export class DeleteDialog {
 
   onCancel() {
     this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'edit-dialog',
+  styleUrls: ['./edit-dialog.css'],
+  templateUrl: './edit-dialog.html',
+})
+export class EditDialog {
+  constructor(
+    //private dialogRef: MatDialogRef<DeleteDialog>,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
+  onConfirm() {
+    this.router.navigate(['./edit-draft'], {relativeTo: this.data.route});
+  }
+
+  onCancel() {
+    this.router.navigate(['./edit'], {relativeTo: this.data.route});
   }
 }

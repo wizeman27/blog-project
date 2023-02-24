@@ -28,6 +28,7 @@ const routes: Routes = [
     children: [{ path: 'profile', component: UserProfileComponent }],
   },
   { path: ':address/edit', component: BlogEditComponent, canDeactivate: [PendingChangesGuard] },
+  { path: ':address/edit-draft', component: BlogEditComponent, canDeactivate: [PendingChangesGuard] },
   {
     path: ':address',
     component: BlogArticleComponent,

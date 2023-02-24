@@ -26,14 +26,13 @@ export class Blog {
     }>,
     public blogTags?: Array<string>,
     public draft?: {
-      author: User;
-      title: string;
-      description: string;
-      featured: boolean;
-      lastSavedDate: Date;
-      address: string;
-      category: string;
-      sections: Array<{
+      title?: string;
+      description?: string;
+      featured?: boolean;
+      lastSavedDate?: Date;
+      address?: string;
+      category?: string;
+      sections?: Array<{
         sectionTitle?: string;
         sectionText?: string;
         sectionMediaType?: string;
@@ -41,11 +40,6 @@ export class Blog {
       }>;
       heroImage?: string;
       quotes?: Array<string>;
-      comments?: Array<{
-        commentText: string;
-        commentAuthor: User;
-        commentDate: Date;
-      }>;
       blogTags?: Array<string>;
     }
   ) {}

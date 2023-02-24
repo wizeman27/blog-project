@@ -18,6 +18,23 @@ import { ComponentCanDeactivate } from './pending-changes.guard';
 export interface BlogTag {
   name: string;
 }
+export interface BlogDraft {
+  title?: string;
+  description?: string;
+  featured?: boolean;
+  lastSavedDate?: Date;
+  address?: string;
+  category?: string;
+  sections?: Array<{
+    sectionTitle?: string;
+    sectionText?: string;
+    sectionMediaType?: string;
+    sectionMediaPath?: string;
+  }>;
+  heroImage?: string;
+  quotes?: Array<string>;
+  blogTags?: Array<string>;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +45,7 @@ export interface BlogTag {
   styleUrls: ['./blog-edit.component.css'],
 })
 export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
+  blogHasDraft: boolean;
   address: string;
   editMode = false;
   isLinear = false;
@@ -39,9 +57,16 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   isPublished: boolean;
   blogAuthor: User;
   newPost: Blog;
+  blogDraft: BlogDraft = {};
   newBlogFeatured: boolean;
   formIsSubmitted = false;
   tagsToSave: string[] = [];
+  quotesToSave: string[] = [];
+  blogComments: Array<{
+    commentText: string;
+    commentAuthor: User;
+    commentDate: Date;
+  }>;
   protected blogCategories = ['Article', 'Essay', 'Short story', 'First draft'];
   protected blogFeaturedOptions = ['Yes', 'No'];
   protected blogMediaTypes = ['Image', 'Video', 'Audio'];
@@ -148,7 +173,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       address: new FormControl(blogAddress, Validators.required),
     });
 
-    if(!this.editMode) {
+    if (!this.editMode) {
       // auto-fill URL address based on blog title
       this.blogRequiredFields.get('title').valueChanges.subscribe((change) =>
         this.blogRequiredFields.get('address').setValue(
@@ -174,13 +199,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     });
 
     // save tags array values if it's edited
-    this.blogOptionalFields.get("blogTags").valueChanges.subscribe(
-      (value: string[]) => {
+    this.blogOptionalFields
+      .get('blogTags')
+      .valueChanges.subscribe((value: string[]) => {
         this.tagsToSave = value;
-        console.log(value);
-      }
-    );
-
+        //console.log(value);
+      });
 
     this.blogReview = this._formBuilder.group({
       thirdCtrl: [''],
@@ -196,9 +220,6 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     }
   }
 
-
-
-
   get sections() {
     return <FormArray>this.blogText.get('sections');
   }
@@ -207,7 +228,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     return <FormArray>this.blogOptionalFields.get('quotes');
   }
 
-  newQuote():FormGroup {
+  newQuote(): FormGroup {
     return new FormGroup({
       quotes: new FormControl(''),
     });
@@ -252,8 +273,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     if (
       (this.blogRequiredFields.dirty ||
         this.blogText.dirty ||
-        this.blogOptionalFields.dirty ||
-        this.blogReview.dirty) &&
+        this.blogOptionalFields.dirty) &&
       !this.formIsSubmitted
     ) {
       return false;
@@ -263,63 +283,153 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   }
 
   onSaveDraft() {
-    console.log(this.blogRequiredFields.value);
-    console.log(this.blogText.value);
-    console.log(this.blogOptionalFields.value);
-    console.log(this.blogReview.value);
+    console.log('draft saved.');
+    //console.log(this.blogRequiredFields.value);
+    //console.log(this.blogText.value);
+    //console.log(this.blogOptionalFields.value);
+    //console.log(this.blogReview.value);
+    const blogPost = this.blogService.getBlog(this.address);
+
+    this.onSaveOrSubmit();
+    // save changes to required fields
+    if (this.blogRequiredFields.dirty) {
+      if (this.blogRequiredFields.get('title').dirty) {
+        this.blogDraft.title = this.blogRequiredFields.value.title;
+      }
+      if (this.blogRequiredFields.get('description').dirty) {
+        this.blogDraft.description = this.blogRequiredFields.value.description;
+      }
+      if (this.blogRequiredFields.get('featured').dirty) {
+        this.blogDraft.featured = this.newBlogFeatured;
+      }
+      if (this.blogRequiredFields.get('address').dirty) {
+        this.blogDraft.address = this.blogRequiredFields.value.address;
+      }
+      if (this.blogRequiredFields.get('category').dirty) {
+        this.blogDraft.category = this.blogRequiredFields.value.category;
+      }
+    }
+    // save changes to blog text
+    if (this.blogText.dirty) {
+      this.blogDraft.sections = this.blogText.value.sections;
+    }
+    // save changes to optional fields
+    if (this.blogOptionalFields.dirty) {
+      if (this.blogOptionalFields.get('heroImage').dirty) {
+        this.blogDraft.heroImage = this.blogOptionalFields.value.heroImage;
+      }
+      if (this.blogOptionalFields.get('quotes').dirty) {
+        this.blogDraft.quotes = this.quotesToSave;
+      }
+      if (this.blogOptionalFields.get('blogTags').dirty) {
+        this.blogDraft.blogTags = this.tagsToSave;
+      }
+    }
+    // timestamp the draft
+    this.blogDraft.lastSavedDate = new Date();
 
     if (this.editMode) {
-      //this.blogService.updateBlog(this.address, );
-    } else {
-      //this.blogService.newBlog();
+      if (this.isPublished) {
+        // When editing a published post, keep main fields as is, save any changes to draft field
+        this.newPost = new Blog(
+          blogPost.author,
+          blogPost.title,
+          blogPost.description,
+          blogPost.featured,
+          blogPost.publishedDate,
+          blogPost.address,
+          blogPost.category,
+          blogPost.status,
+          blogPost.sections,
+          blogPost.heroImage,
+          blogPost.quotes,
+          blogPost.comments,
+          blogPost.blogTags,
+          this.blogDraft
+        );
+      } else { // when editing a draft, we'll overwrite main fields
+        this.newPost = new Blog(
+          blogPost.author,
+          this.blogRequiredFields.value.title,
+          this.blogRequiredFields.value.description,
+          this.newBlogFeatured,
+          new Date(),
+          this.blogRequiredFields.value.address,
+          this.blogRequiredFields.value.category,
+          'Draft',
+          this.blogText.value.sections,
+          this.blogOptionalFields.value.heroImage,
+          this.quotesToSave,
+          this.blogComments,
+          this.tagsToSave
+        );
+      }
+      // update the blog
+      this.blogService.updateBlog(this.address, this.newPost);
+    } else { // when creating a new post, we'll overwrite main fields
+      this.newPost = new Blog(
+        // We'll get the user info from auth component or local storage later
+        this.blogAuthor,
+        this.blogRequiredFields.value.title,
+        this.blogRequiredFields.value.description,
+        this.newBlogFeatured,
+        new Date(),
+        this.blogRequiredFields.value.address,
+        this.blogRequiredFields.value.category,
+        'Draft',
+        this.blogText.value.sections,
+        this.blogOptionalFields.value.heroImage,
+        this.quotesToSave,
+        this.blogComments,
+        this.tagsToSave
+      );
+      // create a new post
+      this.blogService.newBlog(this.newPost);
     }
+    // mark form fields as pristine
+    this.blogRequiredFields.markAsPristine();
+    this.blogOptionalFields.markAsPristine();
+    this.blogText.markAsPristine();
+    console.log(this.newPost);
   }
 
-  onSubmit() {
+  onSaveOrSubmit() {
     const blogPost = this.blogService.getBlog(this.address);
-    console.log('form submitted.');
-    console.log(this.blogRequiredFields.value);
-    console.log(this.blogText.value);
-    console.log(this.blogOptionalFields.value);
-    console.log(this.blogReview.value);
-
     // change featured field into boolean
     if (this.blogRequiredFields.value.featured === 'Yes') {
       this.newBlogFeatured = true;
     } else if (this.blogRequiredFields.value.featured === 'No') {
       this.newBlogFeatured = false;
     }
-    // check if tags have been edited
-
-    if(!this.blogOptionalFields.get("blogTags").dirty){
+    // if tags have not been edited, keep the original array
+    if (!this.blogOptionalFields.get('blogTags').dirty) {
       this.tagsToSave = blogPost.blogTags;
     }
-
     // get comments if they exist
-    let blogComments: Array<{
-      commentText: string;
-      commentAuthor: User;
-      commentDate: Date;
-    }>;
-
-    if(this.editMode) {
+    if (this.editMode) {
       if (blogPost.comments) {
-        blogComments = blogPost.comments;
+        this.blogComments = blogPost.comments;
       }
     }
-
     // format quotes before saving
-    let quotesToSave: string[] = [] ;
-
     for (let quote of this.blogOptionalFields.value.quotes) {
-
-      quotesToSave.push(quote.quotes);
+      this.quotesToSave.push(quote.quotes);
     }
+  }
 
-    console.log("Title:" +JSON.stringify(this.blogText.value.title));
-    console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
-    console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
-    console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
+  onSubmit() {
+    console.log('form submitted.');
+    //console.log(this.blogRequiredFields.value);
+    //console.log(this.blogText.value);
+    //console.log(this.blogOptionalFields.value);
+    //console.log(this.blogReview.value);
+
+    //console.log("Title:" +JSON.stringify(this.blogText.value.title));
+    //console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
+    //console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
+    //console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
+
+    this.onSaveOrSubmit();
 
     this.newPost = new Blog(
       // We'll get the user info from auth component or local storage later
@@ -331,14 +441,11 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.blogRequiredFields.value.address,
       this.blogRequiredFields.value.category,
       'Published',
-      // sections are not correctly generated
       this.blogText.value.sections,
       this.blogOptionalFields.value.heroImage,
-      // quotes are not correctly generated
-      quotesToSave,
-      blogComments,
-      // tags are not correctly generated
-      this.tagsToSave,
+      this.quotesToSave,
+      this.blogComments,
+      this.tagsToSave
     );
 
     if (this.editMode) {
