@@ -12,12 +12,14 @@
         <div class="main-text" *ngFor="let section of blog.sections">
           <h3>{{section.sectionTitle}}</h3>
           <p>{{section.sectionText}}</p>
+          <img src="{{section.sectionMediaPath}}" alt="{{section.sectionMediaText}}">
         </div>
+        <p>Quote: {{blog.quotes[0]}} </p>
         <p>Published on {{blog.publishedDate}}</p>
         <p>Category: {{blog.category}}</p>
         <p>Tags:</p>
         <mat-chip-listbox aria-label="Tags">
-          <div *ngFor="let tag of blog.tags">
+          <div *ngFor="let tag of blog.blogTags">
             <mat-chip>{{tag}}</mat-chip>
           </div>
         </mat-chip-listbox>

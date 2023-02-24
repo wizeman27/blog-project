@@ -34,12 +34,18 @@ export class BlogService {
           sectionText: `The debate on Orientalism has proved to be fruitful in exposing the vitality of a critical determination of discourse within which the text –objects, words, images, and expressions—gains significance. Sadly though, Said’s critical approach to the issue is inevitably perceived as political, to differing extents. This article aims to critically read the traces of a constructed orientalist collective mind –abstracted from any particular era in history to cover all that is modern/postmodern about it—in the work of orientalist artists in 19th century, especially the realists. It also aims to clarify, or further develop on, Said’s definition of Orientalism as an “epistemological and ontological distinction between the West and the East.” (quoted in Yeğenoğlu, 1999: 6) to accentuate the incest relation of the Orient, the created western ‘other’, with the western ‘self’ and their more and more conspicuous similarity to each other. (see Baudrillard, 2001: 10)
           “Hegel’s work was immense ... in its exceptional synthesis of the vision to which the West strove to subordinate the world.” (Hentsch, 1992: 140) The pioneer of modern western thought, Hegel’s philosophy of Geist, is a good presentation of the construction of the modernist subject –stereotyped as a free, rational European male- and its inherent contradiction. Nietzsche remarks that this subject is a synthetic concept whose willing supposedly suffices for action. (Nietzsche, 1983: 30) Hegel envisions ‘universality’ as attained through the coexistence of the master along with the slave and appears to promote cultural pluralism but at the end of Hegelian History, we see the ‘other’ losing its alterité. “Hegel explains God in terms of dynamism, a dynamism whose end point was Modern Europe.” (Hentsch, 1992: 141) In effect, no real alternative other is anymore tolerated within our understanding of reality. The synthetic subject has then created synthetic others and assimilated them.
           As a distinctly “western” ideal, universalism results in an increasing similarity for the ‘other’ and the ‘self’ in different ways. (Baudrillard, 2000: 120) In an imagined non-modernist context, the self and the other would be expected to interact as different realms of existence and meaning, separated with veils, symbolisms, and mysticisms. The synthetic subject of modernity does not tolerate such radical differences and through a puritanical praise of the ‘good’ and the ‘positive’ and a process of neat disinfection, the subject, as a moral agent, reduces itself and its created, or imagined, ‘other’ to the universal ground of the real, objective. (Baudrillard, 2000: 10-11)`,
+          sectionMediaType: 'Image',
+          sectionMediaPath: 'https://source.unsplash.com/NDtcHl4iDMY',
+          sectionMediaText: 'Stacked oranges lol',
         },
         {
           sectionTitle: 'Realism for universalism',
           sectionText: `L’effet de réel, a literary concept introduced by Barthes, constitutes primarily of a loss of meaning, a referential delusion. (Barthes, 2006: 58) The modern search for what is merely objective, scientific, and universalizable results in a modern reality of physical matter, pure information and mere form void of meaning, significance, identity and symbol. (Guénon, 1990: 32) Realism, which Barthes considers to be just another new verisimilitude, relies on the ‘absolute’ –the universal—rather than the view of majority. (Barthes, 2006: 57) Within realism as a literary technique, absences function as presences through an insistence on viewing the text as a signifier with a hidden signified which is hors du texte. Kerbrat puts down the common principle of realism: “All text refers, sends back [renvoie], to a world (pre-constructed, or constructed by the text itself) left out of language.” (1982: 28) A mere reference to this hors du texte reality –an objective, and thus universal, reality—is considered sufficient for the text to be significant. Nietzsche explains us how the western mind came to leave the subject absent in such a realist act: “What did that god mean who counseled ‘know thyself!’? Does that perhaps mean: ‘Have no further concern with thyself! become objective!’” (Nietzsche, 1983: 74)
           Reading Orientalism from this perspective, we face a created image of ‘other’, one that is more and more similar rather than different. There are several motives leading to the creation of an ‘other.’ The synthetic subject looks for ways to avoid elaborating itself and exploring the ‘other’ allows it to suggest such an elaboration as trivial, thus rendering it more and more powerful. The ‘other’ness of this created image does not lie in its alterité. It is constituted of those parts of the self that need to be cleansed, controlled, repressed and denied any further existence. Through this process, it becomes a mere mirror image and when at the end the self vanishes, the other vanishes along with it and the postmodern individual looks for ways to reconstruct an identity from mere traces in a chaos that is universality. (Baudrillard, 2000: 14-16)
           “Said also emphasizes that Orientalism is an apparatus of knowledge with its will-to-truth.” (Yeğenoğlu, 1999: 26) The orientalist discourse makes use of, or rather produces, a ‘real’ Orient as the ground for its construction of an ‘other’. But the ‘reality’ in question is merely a reference to the material, and apparent, what is hors du texte divorced from meaning, symbol, and identity in the quest for universality. Realism is indeed one of the first signs of the assimilation –as in ‘similarity’- of the ‘other.’ A disastrous project as it pierces and tears down the veils of meaning to descend to a degree of existence where there are no more veils but pure chaos. This “chaos constitutes a border for what would perish in total void without it.” (Baudrillard, 2000: 15)`,
+          sectionMediaType: 'Image',
+          sectionMediaPath: 'https://cdn.kastatic.org/ka-perseus-images/b135e4fe83072e619b7b5556b8c0aa43cd1f0d6e.jpg',
+          sectionMediaText: `Gustave Courbet, A Burial at Ornans, 1849-50, oil on canvas, 314 x 663 cm (Musee d'Orsay, Paris)`,
         },
         {
           sectionTitle: 'The picturesque as an aesthetic style',
@@ -54,6 +60,9 @@ export class BlogService {
           Nochlin, on her examination of Delacroix’s Death of Sardanapalus (1827-8), remarks that Orient is constructed as “a fantasy space onto which strong desires –erotic, sadistic, or both– could be projected” (Nochlin, 1989: 41) This “private fantasy did not exist in a vacuum, but in a particular social context which granted permission for as well as established the boundaries of certain kinds of behavior.” (Nochlin, 1989: 42) Indeed, “what he, [Delacroix], displays with such extraordinary power is the mirror of our repressed selves.” (Hentsch, 1992: 154) Another famous representation of the female in orientalist art is the slave, or ‘odalisque’. Gerome’s famous Slave Market (early 1860’s) invites the male viewer “sexually to identify with, yet morally distance himself from, his Oriental counterparts depicted within the objectively inviting yet racially distancing space of the painting.” (Nochlin, 1989: 45) Strikingly, Gerome has painted similar sceneries, using in turn the Roman Empire instead of the Orient as spatio-temporal context. This points out that the reference to an Oriental socio-political reality is indeed mostly trivial about orientalist painting.
           A comparison with Manet’s revolutionary Masked Ball at the Opera (1873-4) which presents another ‘flesh market’, inconveniently at home (behind the galleries of the Opera House), with the French nouveaux riches as buyers and the female flesh realistically presented in fancy dresses rather than au naturel may tell us a lot on the process of ‘other’ization and what really is ‘other’ized. (Nochlin, 1989: 45-47) “Those parts of the Self which are deemed unacceptable to the ego, for reasons of culture, personal history, religion etc. are repressed into the unconscious and as a result are subject to being projected on others: the external Other becomes a substitute for an unacknowledged internal Other.” (Čerkez, 2004: 3)
           The accentuation of lesbianism in orientalist paintings of Gerome (Moorish Bath) and Debat-Ponsan (The Massage, 1883) among others is a good example of how representations of homosexuality in orientalist fantasies can serve fairly heterosexual purposes. “Western heterosexual fantasies about lesbianism within the harem are a trope of orientalist discourse.” (Hayes, 2000: 32) The opposition of the active, ugly black woman and the passive beautiful white one that is obviously getting ready to be presented to her master strongly alludes to lesbianism, not as the counter-part of male homosexuality but as an element intensifying the constructed sexuality of the oriental female and thus increasing the male heterosexual desire for it.`,
+          sectionMediaType: 'Image',
+          sectionMediaPath: 'https://source.unsplash.com/2w891xh3VYg',
+          sectionMediaText: 'Picturesque village path',
         },
         {
           sectionTitle: 'Fantasy for universalism',
@@ -62,6 +71,9 @@ export class BlogService {
           This deconstructive process suggested by the creation of the western subject is indeed appealing and is exemplified by the photographic realism of academic Orientalism. Tracing this style further in time, we encounter such approaches as academic and documentary photography, most famously branded by The National Geographic Society. Malek Alloula, in his remarkable work, The Colonial Harem, presents us with a closer relative: orientalist postcards. The similarity of this genre to orientalist paintings is not merely constituted by the supposed common use of photography as an aide-memoire ensuring accuracy, but rather the entire process of deconstruction and reconstruction –the studio work, the collection of curious, exotic objects, the modeling, and what not.
           Barthes explains us a distinctive practicality-based feature of photography affecting its epistemic structures: “It is not impossible to perceive the signifier … but it requires a secondary action of knowledge or of reflection.” (quoted in Alloula, 2003: 27) The modeling, extensive studio work, and the photographer’s actual instructions to improve the atmosphere conveyed are expected to compensate for the weakness of the theme and the poverty of the imagination. (Alloula, 2003: 28-36) It is a process aiming at nourishing the material ‘reality’ in the absence of coherent meaning and significance.
           The process indispensable for orientalist painters is similar in character, and as such it produces what is popular. The intervention of the buyer, especially considering most of those paintings are indeed executed in Europe and the impossibility to exclude the artist’s individuality from the epistemic realm of the western almost inevitably yield to the production of the popular. Nochlin remarks, “[a]s such, their strategies of concealment lend themselves admirably to the critical methodologies, the deconstructive techniques now employed by the best film historians, or by sociologists of advertising imagery, or by analysts of visual propaganda, rather than those of mainstream art history.” (Nochlin, 1989: 57)`,
+          sectionMediaType: 'Image',
+          sectionMediaPath: 'https://cdn.kastatic.org/ka-perseus-images/d8809cd940cf0ad156eb12d605610a0f59e7d91b.jpg',
+          sectionMediaText: `Gustave Courbet, A Burial at Ornans, 1849-50, oil on canvas, 314 x 663 cm (Musee d'Orsay, Paris)`,
         },
         {
           sectionTitle: 'Conclusion',
@@ -377,28 +389,15 @@ export class BlogService {
   }
 
   getTags(): Set<string> {
-    const arrayOfTags = this.blogs.map((t) => t.tags);
-
+    const arrayOfTags = this.blogs.map((t) => t.blogTags);
     const combinedArray = [].concat(...arrayOfTags);
-    const tags = new Set(combinedArray);
-
-    // this.blogs.map(
-    //   function (e) {
-    //     return e.tags;
-    // ).forEach(t => tags.add(t));
-
-    // for (let b of this.blogs) {
-    //   for (let t of b.tags) {
-    //     tags.add(t);
-    //   }
-    // }
-    return tags;
+    return new Set(combinedArray);
   }
 
   getBlogsByTags(tags: string[]) {
     let filteredBlogs: Blog[] = [];
     this.blogs.filter((blog) => {
-      for (let t of blog.tags) {
+      for (let t of blog.blogTags) {
         if (tags.includes(t)) {
           if (filteredBlogs.includes(blog) === false) {
             filteredBlogs.push(blog);

@@ -41,8 +41,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   newPost: Blog;
   newBlogFeatured: boolean;
   formIsSubmitted = false;
+  tagsToSave: string[] = [];
   protected blogCategories = ['Article', 'Essay', 'Short story', 'First draft'];
   protected blogFeaturedOptions = ['Yes', 'No'];
+  protected blogMediaTypes = ['Image', 'Video', 'Audio'];
 
   constructor(
     private route: ActivatedRoute,
@@ -109,14 +111,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         for (let quote of blogPost.quotes) {
           blogQuotes.push(
             new FormGroup({
-              quoteText: new FormControl(quote),
+              quotes: new FormControl(quote),
             })
           );
         }
       }
-      if (blogPost['tags']) {
-        for (let tag of blogPost.tags) {
-          this.tags.push({ name: tag });
+      if (blogPost['blogTags']) {
+        for (let tag of blogPost.blogTags) {
+          this.blogTags.push({ name: tag });
         }
       }
       if (blogPost['sections']) {
@@ -124,11 +126,13 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           blogSections.push(
             new FormGroup({
               sectionTitle: new FormControl(section.sectionTitle),
-              sectionDescription: new FormControl(
+              sectionText: new FormControl(
                 section.sectionText,
                 Validators.required
               ),
-              sectionImage: new FormControl(section.sectionImage),
+              sectionMediaType: new FormControl(section.sectionMediaType),
+              sectionMediaPath: new FormControl(section.sectionMediaPath),
+              sectionMediaText: new FormControl(section.sectionMediaText),
             })
           );
         }
@@ -144,18 +148,21 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       address: new FormControl(blogAddress, Validators.required),
     });
 
-    // auto-fill URL address based on blog title
-    this.blogRequiredFields.get('title').valueChanges.subscribe((change) =>
-      this.blogRequiredFields.get('address').setValue(
-        change &&
-          change
-            .match(
-              /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-            )
-            .map((x) => x.toLowerCase())
-            .join('-')
-      )
-    );
+    if(!this.editMode) {
+      // auto-fill URL address based on blog title
+      this.blogRequiredFields.get('title').valueChanges.subscribe((change) =>
+        this.blogRequiredFields.get('address').setValue(
+          change &&
+            change
+              .match(
+                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+              )
+              .map((x) => x.toLowerCase())
+              .join('-')
+        )
+      );
+    }
+
     this.blogText = new FormGroup({
       sections: blogSections,
     });
@@ -163,8 +170,17 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     this.blogOptionalFields = this._formBuilder.group({
       heroImage: new FormControl(blogHeroImage),
       quotes: blogQuotes,
-      tags: new FormControl(blogTags),
+      blogTags: new FormControl(blogTags),
     });
+
+    // save tags array values if it's edited
+    this.blogOptionalFields.get("blogTags").valueChanges.subscribe(
+      (value: string[]) => {
+        this.tagsToSave = value;
+        console.log(value);
+      }
+    );
+
 
     this.blogReview = this._formBuilder.group({
       thirdCtrl: [''],
@@ -180,6 +196,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     }
   }
 
+
+
+
   get sections() {
     return <FormArray>this.blogText.get('sections');
   }
@@ -188,17 +207,19 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     return <FormArray>this.blogOptionalFields.get('quotes');
   }
 
-  newQuote(): FormGroup {
+  newQuote():FormGroup {
     return new FormGroup({
-      quoteText: new FormControl(null),
+      quotes: new FormControl(''),
     });
   }
 
   newSection(): FormGroup {
     return new FormGroup({
-      sectionTitle: new FormControl(null),
-      sectionDescription: new FormControl(null, Validators.required),
-      sectionImage: new FormControl('https://source.unsplash.com/'),
+      sectionTitle: new FormControl(''),
+      sectionText: new FormControl('', Validators.required),
+      sectionMediaType: new FormControl(''),
+      sectionMediaPath: new FormControl('https://source.unsplash.com/'),
+      sectionMediaText: new FormControl(''),
     });
   }
 
@@ -268,10 +289,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     } else if (this.blogRequiredFields.value.featured === 'No') {
       this.newBlogFeatured = false;
     }
-    // change tags into array of strings
-    //const arraysSet:Set<string> = new Set(this.blogOptionalFields.value.tags);
-    //console.log();
-    //console.log();
+    // check if tags have been edited
+
+    if(!this.blogOptionalFields.get("blogTags").dirty){
+      this.tagsToSave = blogPost.blogTags;
+    }
+
     // get comments if they exist
     let blogComments: Array<{
       commentText: string;
@@ -284,10 +307,19 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         blogComments = blogPost.comments;
       }
     }
+
+    // format quotes before saving
+    let quotesToSave: string[] = [] ;
+
+    for (let quote of this.blogOptionalFields.value.quotes) {
+
+      quotesToSave.push(quote.quotes);
+    }
+
     console.log("Title:" +JSON.stringify(this.blogText.value.title));
     console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
     console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
-    console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.tags));
+    console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
 
     this.newPost = new Blog(
       // We'll get the user info from auth component or local storage later
@@ -303,10 +335,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.blogText.value.sections,
       this.blogOptionalFields.value.heroImage,
       // quotes are not correctly generated
-      this.blogOptionalFields.value.quotes,
+      quotesToSave,
       blogComments,
       // tags are not correctly generated
-      this.blogOptionalFields.value.tags
+      this.tagsToSave,
     );
 
     if (this.editMode) {
@@ -332,14 +364,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   // Properties and methods for Tag chips
   addOnBlur = true;
 
-  tags: BlogTag[] = [];
+  blogTags: BlogTag[] = [];
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
     // Add tag
     if (value) {
-      this.tags.push({ name: value });
+      this.blogTags.push({ name: value });
     }
 
     // Clear the input value
@@ -347,10 +379,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   }
 
   remove(tag: BlogTag): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.blogTags.indexOf(tag);
 
     if (index >= 0) {
-      this.tags.splice(index, 1);
+      this.blogTags.splice(index, 1);
     }
   }
 
@@ -364,9 +396,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     }
 
     // Edit existing tag
-    const index = this.tags.indexOf(tag);
+    const index = this.blogTags.indexOf(tag);
     if (index >= 0) {
-      this.tags[index].name = value;
+      this.blogTags[index].name = value;
     }
   }
 }

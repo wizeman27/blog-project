@@ -12,8 +12,10 @@ export class Blog {
     public status: string,
     public sections: Array<{
       sectionTitle?: string;
-      sectionText: string;
-      sectionImage?: string;
+      sectionText?: string;
+      sectionMediaType?: string;
+      sectionMediaPath?: string;
+      sectionMediaText?: string;
     }>,
     public heroImage?: string,
     public quotes?: Array<string>,
@@ -22,7 +24,7 @@ export class Blog {
       commentAuthor: User;
       commentDate: Date;
     }>,
-    public tags?: Array<string>,
+    public blogTags?: Array<string>,
     public draft?: {
       author: User;
       title: string;
@@ -33,8 +35,9 @@ export class Blog {
       category: string;
       sections: Array<{
         sectionTitle?: string;
-        sectionText: string;
-        sectionImage?: string;
+        sectionText?: string;
+        sectionMediaType?: string;
+        sectionMediaPath?: string;
       }>;
       heroImage?: string;
       quotes?: Array<string>;
@@ -43,7 +46,7 @@ export class Blog {
         commentAuthor: User;
         commentDate: Date;
       }>;
-      tags?: Array<string>;
+      blogTags?: Array<string>;
     }
   ) {}
 }
