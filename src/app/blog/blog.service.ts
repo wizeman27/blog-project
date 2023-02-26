@@ -391,7 +391,7 @@ export class BlogService {
   }
 
   getFeaturedBlogs(): Blog[] {
-    return this.blogs.filter((blog) => blog.featured);
+    return this.blogs.filter((blog) => blog.featured && blog.status === 'Published');
   }
 
   getBlog(address: string): Blog {
@@ -406,7 +406,7 @@ export class BlogService {
 
   getBlogsByTags(tags: string[]) {
     let filteredBlogs: Blog[] = [];
-    this.blogs.filter((blog) => {
+    this.getBlogs().filter((blog) => {
       for (let t of blog.blogTags) {
         if (tags.includes(t)) {
           if (filteredBlogs.includes(blog) === false) {
@@ -419,7 +419,7 @@ export class BlogService {
   }
 
   getBlogsByCategory(category: string) {
-    return this.blogs.filter(
+    return this.getBlogs().filter(
       (blog) => blog.category.toLowerCase() === category.toLowerCase()
     );
   }

@@ -4,6 +4,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+import { MatSnackBar,  } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Blog } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
@@ -38,7 +39,7 @@ export class BlogArticleComponent implements OnInit {
   }
 
   onSelectSection(title: string) {
-    this.router.navigate(['#'+title], {relativeTo: this.route});
+    this.router.navigate(['#' + title], { relativeTo: this.route });
   }
 
   onDeletePost() {
@@ -50,16 +51,15 @@ export class BlogArticleComponent implements OnInit {
 
   onEdit() {
     // if post has a draft that is more recent than published version,
-    if(this.blog.draft) {
+    if (this.blog.draft) {
       if (this.blog.draft.lastSavedDate > this.blog.publishedDate) {
         // check if user wants to load latest draft or published version.
         this.dialog.open(EditDialog, {
           data: { address: this.address, route: this.route },
         });
       }
-    }
-    else {
-      this.router.navigate(['./edit'], {relativeTo: this.route});
+    } else {
+      this.router.navigate(['./edit'], { relativeTo: this.route });
     }
   }
 }
@@ -70,20 +70,36 @@ export class BlogArticleComponent implements OnInit {
   templateUrl: './delete-dialog.html',
 })
 export class DeleteDialog {
+  title:string = this.blogService.getBlog(this.data.address).title;
+
   constructor(
     private blogService: BlogService,
     private dialogRef: MatDialogRef<DeleteDialog>,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private snackBar: MatSnackBar
   ) {}
+
 
   onDelete() {
     // console.log(this.data.address);
     if (this.data.address) {
       this.blogService.deleteBlog(this.data.address);
     }
-
     this.router.navigate(['/']);
+  }
+
+  openSnackBar() {
+
+    let snackBarRef = this.snackBar.open(`"${this.title}" has been deleted.`, 'OK', {
+      duration: 4000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    snackBarRef.onAction().subscribe(() => {
+      console.log('The snackbar action was triggered!');
+      snackBarRef.dismiss();
+    });
   }
 
   onCancel() {
@@ -104,10 +120,10 @@ export class EditDialog {
   ) {}
 
   onConfirm() {
-    this.router.navigate(['./edit-draft'], {relativeTo: this.data.route});
+    this.router.navigate(['./edit-draft'], { relativeTo: this.data.route });
   }
 
   onCancel() {
-    this.router.navigate(['./edit'], {relativeTo: this.data.route});
+    this.router.navigate(['./edit'], { relativeTo: this.data.route });
   }
 }

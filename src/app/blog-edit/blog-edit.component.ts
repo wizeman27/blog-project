@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   ActivatedRoute,
   Params,
@@ -82,7 +83,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     private blogService: BlogService,
     private router: Router,
     private _formBuilder: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -535,12 +537,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           this.tagsToSave
         );
       }
-      // update the blog
+      // update the post
       this.blogService.updateBlog(this.address, this.newPost);
     } else {
       // when creating a new post, we'll overwrite main fields
       this.newPost = new Blog(
-        // We'll get the user info from auth component or local storage later
+        // We'll get the user info from auth component or localstorage later
         this.blogAuthor,
         this.blogRequiredFields.value.title,
         this.blogRequiredFields.value.description,
@@ -563,7 +565,21 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     this.blogRequiredFields.markAsPristine();
     this.blogOptionalFields.markAsPristine();
     this.blogText.markAsPristine();
-    console.log(this.newPost);
+    //console.log(this.newPost);
+    // show a snackbar confirming draft was saved
+
+    let snackBarRef = this.snackBar.open(`Draft was saved.`, 'OK', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    snackBarRef.onAction().subscribe(() => {
+      console.log('The snackbar action was triggered!');
+      snackBarRef.dismiss();
+    });
+
+
+
   }
 
   onSaveOrSubmit() {
@@ -575,8 +591,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.newBlogFeatured = false;
     }
     // if tags have not been edited, keep the original array
-    if (!this.blogOptionalFields.get('blogTags').dirty) {
-      this.tagsToSave = blogPost.blogTags;
+    if(this.editMode) {
+      if (!this.blogOptionalFields.get('blogTags').dirty) {
+        this.tagsToSave = blogPost.blogTags;
+      }
+    } else {
+      this.tagsToSave = [];
     }
     // get comments if they exist
     if (this.editMode) {
@@ -603,6 +623,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     //console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
     const blogPost = this.blogService.getBlog(this.address);
 
+    let sourceLangToSave:string;
+
+    if (this.editMode) {
+      sourceLangToSave = blogPost.sourceLanguage;
+    } else {
+      sourceLangToSave = 'en';
+    }
+
     this.onSaveOrSubmit();
 
     this.newPost = new Blog(
@@ -615,7 +643,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.blogRequiredFields.value.address,
       this.blogRequiredFields.value.category,
       'Published',
-      blogPost.sourceLanguage,
+      sourceLangToSave,
       this.blogText.value.sections,
       this.blogOptionalFields.value.heroImage,
       this.quotesToSave,
@@ -623,13 +651,28 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.tagsToSave
     );
 
+    let snackMessage: string;
     if (this.editMode) {
       this.blogService.updateBlog(this.address, this.newPost);
+      snackMessage = "Your changes have been published.";
     } else {
       this.blogService.newBlog(this.newPost);
+      snackMessage = "Your new post has been published.";
     }
     this.formIsSubmitted = true;
+    //this.blogService.blogsChanged.next(this.blogService.getBlogs());
+    //this.blogService.featuredBlogsChanged.next(this.blogService.getFeaturedBlogs());
     this.onCancel();
+    // show a snackbar to confirm
+    let snackBarRef = this.snackBar.open(snackMessage, 'OK', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    snackBarRef.onAction().subscribe(() => {
+      console.log('The snackbar action was triggered!');
+      snackBarRef.dismiss();
+    });
   }
 
   onCancel() {
@@ -641,6 +684,18 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     // change post status to Draft
     const blogPost = this.blogService.getBlog(this.address);
     blogPost.status = 'Draft';
+    this.blogService.blogsChanged.next(this.blogService.getBlogs());
+    this.blogService.featuredBlogsChanged.next(this.blogService.getFeaturedBlogs());
+
+    let snackBarRef = this.snackBar.open('Your post has been unpublished. You can continue editing the draft.', 'OK', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
+    snackBarRef.onAction().subscribe(() => {
+      console.log('The snackbar action was triggered!');
+      snackBarRef.dismiss();
+    });
   }
 
   // Properties and methods for Tag chips

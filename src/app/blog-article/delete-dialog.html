@@ -3,6 +3,6 @@
 <div mat-dialog-content>You cannot undo this action. If you'd like to keep a copy, consider unpublishing the post on the edit page.</div>
 <div mat-dialog-actions align="end">
   <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="onCancel()">Cancel</button>
-  <button mat-button mat-dialog-close color="accent" (click)="onDelete()">Delete</button>
+  <button mat-button mat-dialog-close color="accent" (click)="onDelete(); openSnackBar()">Delete</button>
 </div>
 </div>
