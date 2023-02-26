@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -32,6 +33,9 @@ import { AuthComponent } from './auth/auth.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { BlogEditComponent, DiscardDialog } from './blog-edit/blog-edit.component';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
+import { AllBlogsComponent } from './all-blogs/all-blogs.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -50,13 +54,17 @@ import { AboutUsComponent } from './about-us/about-us.component';
     AboutUsComponent,
     DiscardDialog,
     DeleteDialog,
-    EditDialog
+    EditDialog,
+    ScrollToTopComponent,
+    AllBlogsComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
@@ -68,7 +76,8 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MatStepperModule,
     MatInputModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent],

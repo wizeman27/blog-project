@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.search-form {
+  display:flex;
+  width: 80vw;
+  margin-right: 10%;
+  margin-left: 10%;
+
+}
+
+.full-width {
+  width: 100%;
+}
+
+input:placeholder-shown {
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
+input:-moz-placeholder {
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
+[placeholder]{
+  text-overflow:ellipsis;
+}
+
+.backspace{
+  display: none;
+}
+
+.results-panel {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-auto-rows: 1fr;
+  grid-gap: 1rem;
+  max-width: 80vw;
+}
+
+.results-panel card {
+  display: flex;
+  /* max-width: 240px;
+  max-height: 320px;  */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+}
+
+.blog-link {
+  width: 100%;
+}
+
+.giveMeEllipsisDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 9em; /* fallback */
+  margin-top:.5em;
+}
+
+.giveMeEllipsisTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 4.5em; /* fallback */
+  margin-right: .5em;
+  font-weight:400;
+}
+
+.card {
+  max-width: 500px;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+.blog-link {cursor: pointer;}

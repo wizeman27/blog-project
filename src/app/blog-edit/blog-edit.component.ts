@@ -8,7 +8,11 @@ import {
 } from '@angular/forms';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Params,
+  Router,
+} from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { Blog } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
@@ -47,7 +51,9 @@ export interface BlogDraft {
 export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   blogHasDraft: boolean;
   address: string;
+  urlSection: string;
   editMode = false;
+  draftEditMode = false;
   isLinear = false;
   blogRequiredFields: FormGroup;
   blogOptionalFields: FormGroup;
@@ -82,11 +88,22 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.address = params['address'];
+
       //console.log(this.address);
       this.editMode =
         params['address'] !== null && params['address'] !== undefined;
+      console.log(this.editMode);
+      this.urlSection = this.route.snapshot['_routerState'].url;
+      //console.log(this.urlSection);
+      //console.log(this.urlSection.split('/')[2]);
+      if (this.urlSection.split('/')[2] === 'edit-draft') {
+        this.draftEditMode = true;
+        console.log(this.draftEditMode);
+      }
+
       this.initForm();
     });
+
     this.formFieldWidth = window.innerWidth * 0.8;
     this.blogAuthor = new User(
       'Hakim Mermer',
@@ -114,9 +131,163 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     let blogTags = new FormArray([]);
     let blogSections = new FormArray([]);
 
-    // prepopulate fields
-    if (this.editMode) {
+    // load saved draft if it exists (when editing latest draft)
+    if (this.editMode && this.draftEditMode) {
       const blogPost = this.blogService.getBlog(this.address);
+      //console.log(blogPost.draft.title);
+      if (
+        blogPost.draft.title !== undefined &&
+        blogPost.draft.title !== '' &&
+        blogPost.draft.title !== null
+      ) {
+        blogTitle = blogPost.draft.title;
+      } else {
+        blogTitle = blogPost.title;
+      }
+      if (
+        blogPost.draft.description !== undefined &&
+        blogPost.draft.description !== '' &&
+        blogPost.draft.description !== null
+      ) {
+        blogDescription = blogPost.draft.description;
+      } else {
+        blogDescription = blogPost.description;
+      }
+      if (
+        blogPost.draft.featured !== undefined &&
+        blogPost.draft.featured !== null
+      ) {
+        if (blogPost.draft.featured) {
+          blogPostFeatured = 'Yes';
+        } else {
+          blogPostFeatured = 'No';
+        }
+      } else {
+        if (blogPost.featured) {
+          blogPostFeatured = 'Yes';
+        } else {
+          blogPostFeatured = 'No';
+        }
+      }
+      const featuredIndex = this.blogFeaturedOptions.indexOf(blogPostFeatured);
+      blogFeatured = this.blogFeaturedOptions[featuredIndex];
+
+      if (
+        blogPost.draft.category !== undefined &&
+        blogPost.draft.category !== '' &&
+        blogPost.draft.category !== null
+      ) {
+        const categoryIndex = this.blogCategories.indexOf(blogPost.draft.category);
+        blogCategory = this.blogCategories[categoryIndex];
+      } else {
+        const categoryIndex = this.blogCategories.indexOf(blogPost.category);
+      blogCategory = this.blogCategories[categoryIndex];
+      }
+
+
+
+
+
+
+      if (
+        blogPost.draft.address !== undefined &&
+        blogPost.draft.address !== '' &&
+        blogPost.draft.address !== null
+      ) {
+        blogAddress = blogPost.draft.address;
+      } else {
+        blogAddress = blogPost.address;
+      }
+      if (
+        blogPost.draft.heroImage !== undefined &&
+        blogPost.draft.heroImage !== '' &&
+        blogPost.draft.heroImage !== null
+      ) {
+        blogHeroImage = blogPost.draft.heroImage;
+      } else {
+        blogHeroImage = blogPost.heroImage;
+      }
+
+      if (
+        blogPost.draft.quotes !== undefined &&
+        blogPost.draft.quotes !== null
+      ) {
+        if (blogPost.draft['quotes']) {
+          for (let quote of blogPost.draft.quotes) {
+            blogQuotes.push(
+              new FormGroup({
+                quotes: new FormControl(quote),
+              })
+            );
+          }
+        }
+      } else {
+        if (blogPost['quotes']) {
+          for (let quote of blogPost.quotes) {
+            blogQuotes.push(
+              new FormGroup({
+                quotes: new FormControl(quote),
+              })
+            );
+          }
+        }
+      }
+
+      if (
+        blogPost.draft.blogTags !== undefined &&
+        blogPost.draft.blogTags !== null
+      ) {
+        if (blogPost.draft['blogTags']) {
+          for (let tag of blogPost.draft.blogTags) {
+            this.blogTags.push({ name: tag });
+          }
+        }
+      } else {
+        if (blogPost['blogTags']) {
+          for (let tag of blogPost.blogTags) {
+            this.blogTags.push({ name: tag });
+          }
+        }
+      }
+
+      if (
+        blogPost.draft.sections !== undefined &&
+        blogPost.draft.sections !== null
+      ) {
+        if (blogPost.draft['sections']) {
+          for (let section of blogPost.draft.sections) {
+            blogSections.push(
+              new FormGroup({
+                sectionTitle: new FormControl(section.sectionTitle),
+                sectionText: new FormControl(section.sectionText),
+                sectionMediaType: new FormControl(section.sectionMediaType),
+                sectionMediaPath: new FormControl(section.sectionMediaPath),
+                sectionMediaText: new FormControl(section.sectionMediaText),
+              })
+            );
+          }
+        }
+      } else {
+        if (blogPost['sections']) {
+          for (let section of blogPost.sections) {
+            blogSections.push(
+              new FormGroup({
+                sectionTitle: new FormControl(section.sectionTitle),
+                sectionText: new FormControl(section.sectionText),
+                sectionMediaType: new FormControl(section.sectionMediaType),
+                sectionMediaPath: new FormControl(section.sectionMediaPath),
+                sectionMediaText: new FormControl(section.sectionMediaText),
+              })
+            );
+          }
+        }
+      }
+    }
+
+    // prepopulate fields
+    if (this.editMode && !this.draftEditMode) {
+      const blogPost = this.blogService.getBlog(this.address);
+      //console.log(blogPost.draft.title);
       blogTitle = blogPost.title;
       blogDescription = blogPost.description;
       // Display default value in select dropdown for Featured
@@ -151,10 +322,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           blogSections.push(
             new FormGroup({
               sectionTitle: new FormControl(section.sectionTitle),
-              sectionText: new FormControl(
-                section.sectionText,
-                Validators.required
-              ),
+              sectionText: new FormControl(section.sectionText),
               sectionMediaType: new FormControl(section.sectionMediaType),
               sectionMediaPath: new FormControl(section.sectionMediaPath),
               sectionMediaText: new FormControl(section.sectionMediaText),
@@ -340,6 +508,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           blogPost.address,
           blogPost.category,
           blogPost.status,
+          blogPost.sourceLanguage,
           blogPost.sections,
           blogPost.heroImage,
           blogPost.quotes,
@@ -347,7 +516,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           blogPost.blogTags,
           this.blogDraft
         );
-      } else { // when editing a draft, we'll overwrite main fields
+      } else {
+        // when editing a draft, we'll overwrite main fields
         this.newPost = new Blog(
           blogPost.author,
           this.blogRequiredFields.value.title,
@@ -357,6 +527,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           this.blogRequiredFields.value.address,
           this.blogRequiredFields.value.category,
           'Draft',
+          blogPost.sourceLanguage,
           this.blogText.value.sections,
           this.blogOptionalFields.value.heroImage,
           this.quotesToSave,
@@ -366,7 +537,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       }
       // update the blog
       this.blogService.updateBlog(this.address, this.newPost);
-    } else { // when creating a new post, we'll overwrite main fields
+    } else {
+      // when creating a new post, we'll overwrite main fields
       this.newPost = new Blog(
         // We'll get the user info from auth component or local storage later
         this.blogAuthor,
@@ -377,6 +549,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         this.blogRequiredFields.value.address,
         this.blogRequiredFields.value.category,
         'Draft',
+        blogPost.sourceLanguage,
         this.blogText.value.sections,
         this.blogOptionalFields.value.heroImage,
         this.quotesToSave,
@@ -428,6 +601,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     //console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
     //console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
     //console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
+    const blogPost = this.blogService.getBlog(this.address);
 
     this.onSaveOrSubmit();
 
@@ -441,6 +615,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.blogRequiredFields.value.address,
       this.blogRequiredFields.value.category,
       'Published',
+      blogPost.sourceLanguage,
       this.blogText.value.sections,
       this.blogOptionalFields.value.heroImage,
       this.quotesToSave,

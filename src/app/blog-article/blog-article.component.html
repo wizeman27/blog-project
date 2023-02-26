@@ -9,14 +9,18 @@
         <div class="image">
           <img src="{{blog.heroImage}}" alt="{{blog.title}}">
         </div>
-        <div class="main-text" *ngFor="let section of blog.sections">
-          <h3>{{section.sectionTitle}}</h3>
+        <div class="main-text" *ngFor="let section of blog.sections; index as i">
+          <h3 id="{{section.sectionTitle}}">{{section.sectionTitle}}</h3>
           <p>{{section.sectionText}}</p>
-          <img src="{{section.sectionMediaPath}}" alt="{{section.sectionMediaText}}">
+          <div class="image">
+            <img src="{{section.sectionMediaPath}}" alt="{{section.sectionMediaText}}">
+          </div>
         </div>
-        <p>Quote: {{blog.quotes[0]}} </p>
-        <p>Published on {{blog.publishedDate}}</p>
-        <p>Category: {{blog.category}}</p>
+        <h4>Quote: {{blog.quotes[0]}} </h4>
+        <div>Published on {{blog.publishedDate | date:"mediumDate"}}</div>
+        <h5>Category:
+          <a mat-flat-button routerLink="/blogs/{{blog.category}}">{{blog.category}}</a>
+        </h5>
         <p>Tags:</p>
         <mat-chip-listbox aria-label="Tags">
           <div *ngFor="let tag of blog.blogTags">
@@ -52,14 +56,42 @@
         </div>
 
       </div>
+      <div class="floating-menu">
+        <button class="menu-icon" matTooltip="Blog contents and actions" type="button" mat-fab color="primary"
+          [matMenuTriggerFor]="blogOptions">
+          <mat-icon>list</mat-icon>
+        </button>
+        <mat-menu #blogOptions="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="blogActions">Actions</button>
+          <button mat-menu-item [matMenuTriggerFor]="blogContents">Contents</button>
+
+        </mat-menu>
+
+        <mat-menu #blogContents="matMenu">
+          <div *ngFor="let section of blog.sections">
+            <div *ngIf="section.sectionTitle !== ''">
+              <button mat-menu-item routerLink="./" fragment={{section.sectionTitle}}>{{section.sectionTitle}}</button>
+            </div>
+          </div>
+        </mat-menu>
+
+        <mat-menu #blogActions="matMenu">
+          <button mat-menu-item color="warn" (click)="onEdit()">Edit post</button>
+          <button mat-menu-item color="accent" (click)="onDeletePost()">Delete post</button>
+        </mat-menu>
+
+      </div>
+
     </div>
 
     <div class="column">
       <div class="contents-panel">
         <div *ngFor="let section of blog.sections">
-          <div class="section-links">{{section.sectionTitle}}</div>
+          <div *ngIf="section.sectionTitle !== ''">
+            <div routerLink="./" fragment={{section.sectionTitle}} class="section-links">{{section.sectionTitle}}</div>
+          </div>
         </div>
-        <button mat-button color="warn" (click)="onEdit()">Edit post</button>
+        <a mat-button color="warn" (click)="onEdit()">Edit post</a>
         <button mat-button color="accent" (click)="onDeletePost()">Delete post</button>
       </div>
     </div>

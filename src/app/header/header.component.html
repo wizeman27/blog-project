@@ -2,11 +2,11 @@
   <mat-toolbar color="primary" class="mat-typography sticky">
     <h1 routerLink="">TKS blog</h1>
     <span class="example-spacer"></span>
-    <button mat-icon-button aria-label="Search button" class="search-icon">
+    <button routerLink="/search" mat-icon-button aria-label="Search button" class="search-icon" matTooltip="Search posts">
       <mat-icon>search</mat-icon>
     </button>
     <span>&nbsp;</span>
-    <button mat-icon-button class="menu-icon" [matMenuTriggerFor]="menu" aria-label="Menu button">
+    <button mat-icon-button class="menu-icon" [matMenuTriggerFor]="menu" aria-label="Menu button" matTooltip="Menu">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">

@@ -1,0 +1,9 @@
+<div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
+  <!-- <button type="button" class="btn active" data-toggle="button" aria-pressed="true" (click)="scrollToTop()">
+      <i ></i>
+  </button> -->
+
+  <button matTooltip="Scroll to top" mat-fab color="warn" type="button" aria-label="Scroll to top of page" (click)="scrollToTop()">
+    <mat-icon class="icon-scroll">keyboard_double_arrow_up</mat-icon>
+  </button>
+</div>

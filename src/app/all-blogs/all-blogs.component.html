@@ -1,0 +1,23 @@
+<div>
+  <h3>{{featuredMode ? 'Featured Posts' : 'All Posts'}}</h3>
+  <h2>{{categoryMode ? category : ''}}</h2>
+</div>
+<div class="posts-wrapper">
+  <mat-card class="card" *ngFor="let card of allBlogs; let i = index">
+    <mat-card-header>
+      <div class="blog-link" routerLink="/{{card.address}}">
+      <mat-card-title-group>
+        <mat-card-title class="giveMeEllipsisTitle">{{ card.title }}</mat-card-title>
+        <mat-card-subtitle>{{ card.author.fullName }}</mat-card-subtitle>
+        <img mat-card-md-image src="{{ card.heroImage }}" alt="{{ card.title }}">
+      </mat-card-title-group>
+    </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="giveMeEllipsisDescription">
+      {{ card.description }}
+    </div>
+    </mat-card-content>
+  </mat-card>
+</div>

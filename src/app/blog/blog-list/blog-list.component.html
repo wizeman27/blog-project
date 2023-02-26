@@ -1,5 +1,5 @@
 <div class="bloglist-header">
-  <h3>Blogs</h3>
+  <h3>Posts</h3>
   <a routerLink="blogs">See all</a>
 </div>
 
@@ -9,7 +9,7 @@
   <button mat-flat-button (click)="onShowHideTags()">{{tagsExpanded ? 'Show less tags' : 'Show all tags'}}</button>
   </mat-chip-listbox>
   <div class="clear-button">
-    <button mat-fab color="accent" aria-label="Clear filters" (click)="onClearFilters()">
+    <button matTooltip="Clear filters" mat-fab color="accent" aria-label="Clear filters" (click)="onClearFilters()">
       <mat-icon>delete</mat-icon>
     </button>
   </div>

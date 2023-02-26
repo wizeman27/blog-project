@@ -8,7 +8,7 @@ import { BlogService } from '../blog.service';
   styleUrls: ['./featured-carousel.component.scss'],
 })
 export class FeaturedCarouselComponent implements OnInit {
-  currentIndex: number = 0;
+  //currentIndex: number = 0;
 
   featuredBlogs: Blog[];
 

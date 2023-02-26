@@ -1,0 +1,31 @@
+<form class="search-form">
+  <mat-form-field class="full-width">
+    <mat-label>Search</mat-label>
+    <input name="searchQuery"
+    ngModel type="text" [(ngModel)]="searchQuery" (ngModelChange)="onInputChange()" matInput placeholder="Search for articles, essays, and more">
+    <mat-icon (click)="onDelete()" [ngClass]="{'backspace': editing === false}" matSuffix>backspace</mat-icon>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</form>
+
+<h4>Results for {{searchQuery}}</h4>
+<div class="results-panel">
+
+  <mat-card class="card" *ngFor="let card of results; let i = index">
+    <mat-card-header>
+      <div class="blog-link" routerLink="/{{card.address}}">
+      <mat-card-title-group>
+        <mat-card-title class="giveMeEllipsisTitle">{{ card.title }}</mat-card-title>
+        <mat-card-subtitle>{{ card.author.fullName }}</mat-card-subtitle>
+        <img mat-card-md-image src="{{ card.heroImage }}" alt="{{ card.title }}">
+      </mat-card-title-group>
+    </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="giveMeEllipsisDescription">
+      {{ card.description }}
+    </div>
+    </mat-card-content>
+  </mat-card>
+</div>

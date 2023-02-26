@@ -28,6 +28,7 @@ export class BlogService {
       'rethinking-orientalism-and-the-politics-of-orientalist-art',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'Introduction',
@@ -44,7 +45,8 @@ export class BlogService {
           Reading Orientalism from this perspective, we face a created image of ‘other’, one that is more and more similar rather than different. There are several motives leading to the creation of an ‘other.’ The synthetic subject looks for ways to avoid elaborating itself and exploring the ‘other’ allows it to suggest such an elaboration as trivial, thus rendering it more and more powerful. The ‘other’ness of this created image does not lie in its alterité. It is constituted of those parts of the self that need to be cleansed, controlled, repressed and denied any further existence. Through this process, it becomes a mere mirror image and when at the end the self vanishes, the other vanishes along with it and the postmodern individual looks for ways to reconstruct an identity from mere traces in a chaos that is universality. (Baudrillard, 2000: 14-16)
           “Said also emphasizes that Orientalism is an apparatus of knowledge with its will-to-truth.” (Yeğenoğlu, 1999: 26) The orientalist discourse makes use of, or rather produces, a ‘real’ Orient as the ground for its construction of an ‘other’. But the ‘reality’ in question is merely a reference to the material, and apparent, what is hors du texte divorced from meaning, symbol, and identity in the quest for universality. Realism is indeed one of the first signs of the assimilation –as in ‘similarity’- of the ‘other.’ A disastrous project as it pierces and tears down the veils of meaning to descend to a degree of existence where there are no more veils but pure chaos. This “chaos constitutes a border for what would perish in total void without it.” (Baudrillard, 2000: 15)`,
           sectionMediaType: 'Image',
-          sectionMediaPath: 'https://cdn.kastatic.org/ka-perseus-images/b135e4fe83072e619b7b5556b8c0aa43cd1f0d6e.jpg',
+          sectionMediaPath:
+            'https://cdn.kastatic.org/ka-perseus-images/b135e4fe83072e619b7b5556b8c0aa43cd1f0d6e.jpg',
           sectionMediaText: `Gustave Courbet, A Burial at Ornans, 1849-50, oil on canvas, 314 x 663 cm (Musee d'Orsay, Paris)`,
         },
         {
@@ -72,7 +74,8 @@ export class BlogService {
           Barthes explains us a distinctive practicality-based feature of photography affecting its epistemic structures: “It is not impossible to perceive the signifier … but it requires a secondary action of knowledge or of reflection.” (quoted in Alloula, 2003: 27) The modeling, extensive studio work, and the photographer’s actual instructions to improve the atmosphere conveyed are expected to compensate for the weakness of the theme and the poverty of the imagination. (Alloula, 2003: 28-36) It is a process aiming at nourishing the material ‘reality’ in the absence of coherent meaning and significance.
           The process indispensable for orientalist painters is similar in character, and as such it produces what is popular. The intervention of the buyer, especially considering most of those paintings are indeed executed in Europe and the impossibility to exclude the artist’s individuality from the epistemic realm of the western almost inevitably yield to the production of the popular. Nochlin remarks, “[a]s such, their strategies of concealment lend themselves admirably to the critical methodologies, the deconstructive techniques now employed by the best film historians, or by sociologists of advertising imagery, or by analysts of visual propaganda, rather than those of mainstream art history.” (Nochlin, 1989: 57)`,
           sectionMediaType: 'Image',
-          sectionMediaPath: 'https://cdn.kastatic.org/ka-perseus-images/d8809cd940cf0ad156eb12d605610a0f59e7d91b.jpg',
+          sectionMediaPath:
+            'https://cdn.kastatic.org/ka-perseus-images/d8809cd940cf0ad156eb12d605610a0f59e7d91b.jpg',
           sectionMediaText: `Gustave Courbet, A Burial at Ornans, 1849-50, oil on canvas, 314 x 663 cm (Musee d'Orsay, Paris)`,
         },
         {
@@ -85,8 +88,7 @@ export class BlogService {
           sectionText: `Alloul, Malek. The Colonial Harem. University of Minnesota Press. 2003.
           Barthes, Roland. Ian Watt. Gerçekçilik ve Romansal Biçim. Yirmidört Yayınları. 2006. translation of Barthes, Roland. L’effet de Réel.
           Baudrillard, Jean. Tam Ekran. Yapı Kredi Yayınları. 2000. translation of Ecran Total. Editions Galilée. 1997.
-          Čerkez, Beatriz Tomšič. Tonka Tacol. “Interculturalism and Visual Art Education: Seeking for ‘Spaces in Between’”. 2004. available at
-          <http://www.inter-disciplinary.net/ci/interculturalism/ic2/cerkeztacol%20paper.pdf>
+          Čerkez, Beatriz Tomšič. Tonka Tacol. “Interculturalism and Visual Art Education: Seeking for ‘Spaces in Between’”. 2004.
           Derrida, Jacques. Spurs: Nietzsche’s Styles. The University of Chicago Press. 1979. French-English bilingual version of Eperons: les Styles de Nietzsche. Flammarion. 1978.
           Diener, Pablo. “The Picturesque as an Aesthetic Category in the Art of Travelers: Notes on J. M. Rugendas’s Work.” Historia (Santiago), v.40, n.2, Dec. 2007.
           Guénon, René. Niceliğin Egemenliği ve Çağın Alametleri. İz Yayıncılık. 1990. translation of Le Regne de la Quantité et les Signes des Temps. Paris. 1962.
@@ -132,6 +134,7 @@ export class BlogService {
       'my-first-blog-title-not-featured',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -163,6 +166,7 @@ export class BlogService {
       'my-first-blog-title3',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -194,6 +198,7 @@ export class BlogService {
       'my-first-blog-title4',
       'Article',
       'Draft',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -225,6 +230,7 @@ export class BlogService {
       'my-first-blog-title-featured5',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -256,6 +262,7 @@ export class BlogService {
       'my-first-blog-title-featured6',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -287,6 +294,7 @@ export class BlogService {
       'my-first-blog-title-featured7',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -318,6 +326,7 @@ export class BlogService {
       'my-first-blog-title-featured8',
       'Article',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -347,8 +356,9 @@ export class BlogService {
       true,
       new Date('December 17, 2022 03:24:00'),
       'my-first-blog-title-featured9',
-      'Article',
+      'Story',
       'Published',
+      'en',
       [
         {
           sectionTitle: 'First section title',
@@ -408,6 +418,12 @@ export class BlogService {
     return filteredBlogs;
   }
 
+  getBlogsByCategory(category: string) {
+    return this.blogs.filter(
+      (blog) => blog.category.toLowerCase() === category.toLowerCase()
+    );
+  }
+
   newBlog(blog: Blog) {
     //finalBlog
     this.blogs.push(blog);
@@ -416,7 +432,6 @@ export class BlogService {
     if (blog.featured) {
       this.featuredBlogsChanged.next(this.getFeaturedBlogs());
     }
-
   }
 
   updateBlog(address: string, blog: Blog) {
@@ -432,21 +447,10 @@ export class BlogService {
   }
 
   deleteBlog(address: string) {
-    // let index = this.blogs
-    //   .map(function (e) {
-    //     return e.address;
-    //   })
-    //   .indexOf(address);
-
-    // let index = myArray.findIndex( element => {
-    //   if (element.name === 'Maria') {
-    //     return true;
-    //   }
-    // });
-    console.log("Parameter "+address);
-    const index = this.blogs.findIndex(i => i.address === address);
-    console.log(index);
-    console.log(JSON.stringify(this.blogs[index]));
+    //console.log("Parameter "+address);
+    const index = this.blogs.findIndex((i) => i.address === address);
+    //console.log(index);
+    //console.log(JSON.stringify(this.blogs[index]));
     const isFeatured = this.blogs[index].featured;
     this.blogs.splice(index, 1);
     this.blogsChanged.next(this.getBlogs());
@@ -454,5 +458,20 @@ export class BlogService {
     if (isFeatured) {
       this.featuredBlogsChanged.next(this.getFeaturedBlogs());
     }
+  }
+
+  searchBlogs(query: string) {
+    let filteredBlogs: Blog[];
+    filteredBlogs = this.blogs.filter(
+      (blog) =>
+        // return Object.values(blog).some((value) => {
+        //   return value.toLowerCase().includes(query.toLowerCase());
+        // });
+        blog.title.toLowerCase().includes(query.toLowerCase()) ||
+        blog.description.toLowerCase().includes(query.toLowerCase())
+      //blog.title.toLowerCase().includes(query.toLowerCase())
+    );
+    return filteredBlogs;
+
   }
 }

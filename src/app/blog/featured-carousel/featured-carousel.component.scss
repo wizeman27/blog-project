@@ -5,10 +5,6 @@
 }
 
 .scrolling-wrapper-flexbox {
-  display: flex;
-
-  overflow-x: auto;
-
   // .card {
   //   flex: 0 0 auto;
   //   margin-right: 3px;
@@ -16,6 +12,8 @@
 }
 
 .scrolling-wrapper-flexbox {
+  display: flex;
+  overflow-x: auto;
   height: 300px;
   margin-bottom: 1rem;
   width: 100%;

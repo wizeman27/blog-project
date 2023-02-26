@@ -1,5 +1,33 @@
 import { User } from '../user.model';
 
+export interface BlogTranslation {
+  translator: User;
+  title?: string;
+  description?: string;
+  lastSavedDate?: Date;
+  status: string;
+  language: string;
+  sections?: Array<{
+    sectionTitle?: string;
+    sectionText?: string;
+    sectionMediaText?: string;
+  }>;
+  quotes?: Array<string>;
+  blogTags?: Array<string>;
+  draft?: {
+    title?: string;
+    description?: string;
+    lastSavedDate?: Date;
+    sections?: Array<{
+      sectionTitle?: string;
+      sectionText?: string;
+      sectionMediaText?: string;
+    }>;
+    quotes?: Array<string>;
+    blogTags?: Array<string>;
+  };
+}
+
 export class Blog {
   constructor(
     public author: User,
@@ -10,6 +38,7 @@ export class Blog {
     public address: string,
     public category: string,
     public status: string,
+    public sourceLanguage: string, // 2-letter language code, e.g. 'en' or language and locale code e.g. 'en-US'
     public sections: Array<{
       sectionTitle?: string;
       sectionText?: string;
@@ -37,10 +66,12 @@ export class Blog {
         sectionText?: string;
         sectionMediaType?: string;
         sectionMediaPath?: string;
+        sectionMediaText?: string;
       }>;
       heroImage?: string;
       quotes?: Array<string>;
       blogTags?: Array<string>;
-    }
+    },
+    public translations?: Array<BlogTranslation>,
   ) {}
 }

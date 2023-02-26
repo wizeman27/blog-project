@@ -37,6 +37,10 @@ export class BlogArticleComponent implements OnInit {
     });
   }
 
+  onSelectSection(title: string) {
+    this.router.navigate(['#'+title], {relativeTo: this.route});
+  }
+
   onDeletePost() {
     // open a dialog that asks to confirm, then delete the post.
     this.dialog.open(DeleteDialog, {
