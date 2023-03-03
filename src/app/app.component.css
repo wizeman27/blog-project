@@ -3,3 +3,13 @@
   margin-top: 3.75rem;
   margin-bottom: 4rem;
 }
+
+tui-root  {
+
+  max-height: 100%;
+}
+
+:host {
+  --tui-font-heading: 'Nunito';
+  --tui-font-text:'Nunito';
+}

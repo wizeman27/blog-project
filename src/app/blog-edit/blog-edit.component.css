@@ -50,4 +50,6 @@
   align-items: right;
 }
 
-
+.editor {
+  min-height: 30rem;
+}

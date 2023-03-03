@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataStorageService } from '../shared/data-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -23,4 +24,11 @@ export class HeaderComponent {
   //     this.scrolledUp = false;
   //   }
   // }
+constructor(private dbService: DataStorageService) {}
+
+saveAllToDatabase() {
+  this.dbService.storePosts();
 }
+
+}
+

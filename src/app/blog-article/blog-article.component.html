@@ -11,7 +11,7 @@
         </div>
         <div class="main-text" *ngFor="let section of blog.sections; index as i">
           <h3 id="{{section.sectionTitle}}">{{section.sectionTitle}}</h3>
-          <p>{{section.sectionText}}</p>
+          <tui-editor-socket [content]="section.sectionText"></tui-editor-socket>
           <div class="image">
             <img src="{{section.sectionMediaPath}}" alt="{{section.sectionMediaText}}">
           </div>

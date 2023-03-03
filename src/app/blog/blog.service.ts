@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { User } from '../user.model';
+import { User } from '../shared/user.model';
 import { Blog } from './blog.model';
 
 @Injectable({
@@ -38,6 +38,7 @@ export class BlogService {
           sectionMediaType: 'Image',
           sectionMediaPath: 'https://source.unsplash.com/NDtcHl4iDMY',
           sectionMediaText: 'Stacked oranges lol',
+          sectionMediaCredits: '',
         },
         {
           sectionTitle: 'Realism for universalism',
@@ -388,6 +389,11 @@ export class BlogService {
   getBlogs(): Blog[] {
     // only show published posts
     return this.blogs.filter((blog) => blog.status === 'Published');
+  }
+
+  getAllBlogs(): Blog[] {
+    // return all available posts (published and draft)
+    return this.blogs.slice();
   }
 
   getFeaturedBlogs(): Blog[] {

@@ -1,4 +1,10 @@
-import { Component, HostListener, Injectable, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  Injectable,
+  OnInit,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -9,15 +15,20 @@ import {
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  ActivatedRoute,
-  Params,
-  Router,
-} from '@angular/router';
+  defaultEditorExtensions,
+  TuiEditorTool,
+  TUI_EDITOR_CONTENT_PROCESSOR,
+  TUI_EDITOR_EXTENSIONS,
+} from '@taiga-ui/addon-editor';
+//import { tuiPure } from '@taiga-ui/cdk';
+import MarkdownIt from 'markdown-it';
+//import { Converter } from 'showdown';
 import { Observable, Subject } from 'rxjs';
 import { Blog } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
-import { User } from '../user.model';
+import { User } from '../shared/user.model';
 import { ComponentCanDeactivate } from './pending-changes.guard';
 
 export interface BlogTag {
@@ -48,8 +59,37 @@ export interface BlogDraft {
   selector: 'app-blog-edit',
   templateUrl: './blog-edit.component.html',
   styleUrls: ['./blog-edit.component.css'],
+  providers: [
+    { provide: TUI_EDITOR_EXTENSIONS, useValue: defaultEditorExtensions },
+    {
+      provide: TUI_EDITOR_CONTENT_PROCESSOR,
+      useValue: (markdown: string): string => new MarkdownIt().render(markdown),
+    },
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
+  readonly builtInTools = [
+    TuiEditorTool.Undo,
+    TuiEditorTool.Link,
+    TuiEditorTool.Anchor,
+    TuiEditorTool.Size,
+    TuiEditorTool.Bold,
+    TuiEditorTool.Italic,
+    TuiEditorTool.Underline,
+    TuiEditorTool.List,
+    TuiEditorTool.HR,
+    TuiEditorTool.Sub,
+    TuiEditorTool.Sup,
+    TuiEditorTool.Code,
+    TuiEditorTool.Color,
+    TuiEditorTool.Hilite,
+  ];
+  // @tuiPure
+  // toMarkdown(html: string): string {
+  //   return new Converter().makeMarkdown(html);
+  // }
+
   blogHasDraft: boolean;
   address: string;
   urlSection: string;
@@ -84,7 +124,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     private router: Router,
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -94,13 +134,13 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       //console.log(this.address);
       this.editMode =
         params['address'] !== null && params['address'] !== undefined;
-      console.log(this.editMode);
+      //console.log(this.editMode);
       this.urlSection = this.route.snapshot['_routerState'].url;
       //console.log(this.urlSection);
       //console.log(this.urlSection.split('/')[2]);
       if (this.urlSection.split('/')[2] === 'edit-draft') {
         this.draftEditMode = true;
-        console.log(this.draftEditMode);
+        //console.log(this.draftEditMode);
       }
 
       this.initForm();
@@ -179,17 +219,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         blogPost.draft.category !== '' &&
         blogPost.draft.category !== null
       ) {
-        const categoryIndex = this.blogCategories.indexOf(blogPost.draft.category);
+        const categoryIndex = this.blogCategories.indexOf(
+          blogPost.draft.category
+        );
         blogCategory = this.blogCategories[categoryIndex];
       } else {
         const categoryIndex = this.blogCategories.indexOf(blogPost.category);
-      blogCategory = this.blogCategories[categoryIndex];
+        blogCategory = this.blogCategories[categoryIndex];
       }
-
-
-
-
-
 
       if (
         blogPost.draft.address !== undefined &&
@@ -265,6 +302,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
                 sectionMediaType: new FormControl(section.sectionMediaType),
                 sectionMediaPath: new FormControl(section.sectionMediaPath),
                 sectionMediaText: new FormControl(section.sectionMediaText),
+                sectionMediaCredits: new FormControl(
+                  section.sectionMediaCredits
+                ),
               })
             );
           }
@@ -279,6 +319,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
                 sectionMediaType: new FormControl(section.sectionMediaType),
                 sectionMediaPath: new FormControl(section.sectionMediaPath),
                 sectionMediaText: new FormControl(section.sectionMediaText),
+                sectionMediaCredits: new FormControl(
+                  section.sectionMediaCredits
+                ),
               })
             );
           }
@@ -411,6 +454,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       sectionMediaType: new FormControl(''),
       sectionMediaPath: new FormControl('https://source.unsplash.com/'),
       sectionMediaText: new FormControl(''),
+      sectionMediaCredits: new FormControl(''),
     });
   }
 
@@ -577,9 +621,6 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       console.log('The snackbar action was triggered!');
       snackBarRef.dismiss();
     });
-
-
-
   }
 
   onSaveOrSubmit() {
@@ -591,7 +632,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.newBlogFeatured = false;
     }
     // if tags have not been edited, keep the original array
-    if(this.editMode) {
+    if (this.editMode) {
       if (!this.blogOptionalFields.get('blogTags').dirty) {
         this.tagsToSave = blogPost.blogTags;
       }
@@ -608,6 +649,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     for (let quote of this.blogOptionalFields.value.quotes) {
       this.quotesToSave.push(quote.quotes);
     }
+
+    if (this.blogText.get('sections').dirty) {
+      for (let section of this.blogText.get('sections').value) {
+        //section.sectionTitle.value = '';
+      }
+    }
   }
 
   onSubmit() {
@@ -623,7 +670,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     //console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
     const blogPost = this.blogService.getBlog(this.address);
 
-    let sourceLangToSave:string;
+    let sourceLangToSave: string;
 
     if (this.editMode) {
       sourceLangToSave = blogPost.sourceLanguage;
@@ -654,10 +701,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     let snackMessage: string;
     if (this.editMode) {
       this.blogService.updateBlog(this.address, this.newPost);
-      snackMessage = "Your changes have been published.";
+      snackMessage = 'Your changes have been published.';
     } else {
       this.blogService.newBlog(this.newPost);
-      snackMessage = "Your new post has been published.";
+      snackMessage = 'Your new post has been published.';
     }
     this.formIsSubmitted = true;
     //this.blogService.blogsChanged.next(this.blogService.getBlogs());
@@ -685,13 +732,19 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     const blogPost = this.blogService.getBlog(this.address);
     blogPost.status = 'Draft';
     this.blogService.blogsChanged.next(this.blogService.getBlogs());
-    this.blogService.featuredBlogsChanged.next(this.blogService.getFeaturedBlogs());
+    this.blogService.featuredBlogsChanged.next(
+      this.blogService.getFeaturedBlogs()
+    );
 
-    let snackBarRef = this.snackBar.open('Your post has been unpublished. You can continue editing the draft.', 'OK', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
+    let snackBarRef = this.snackBar.open(
+      'Your post has been unpublished. You can continue editing the draft.',
+      'OK',
+      {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      }
+    );
     snackBarRef.onAction().subscribe(() => {
       console.log('The snackbar action was triggered!');
       snackBarRef.dismiss();

@@ -1,4 +1,4 @@
-import { User } from '../user.model';
+import { User } from '../shared/user.model';
 
 export interface BlogTranslation {
   translator: User;
@@ -45,11 +45,13 @@ export class Blog {
       sectionMediaType?: string;
       sectionMediaPath?: string;
       sectionMediaText?: string;
+      sectionMediaCredits?: string;
     }>,
     public heroImage?: string,
     public quotes?: Array<string>,
     public comments?: Array<{
       commentText: string;
+      commentTitle?: string;
       commentAuthor: User;
       commentDate: Date;
     }>,
@@ -67,6 +69,7 @@ export class Blog {
         sectionMediaType?: string;
         sectionMediaPath?: string;
         sectionMediaText?: string;
+        sectionMediaCredits?: string;
       }>;
       heroImage?: string;
       quotes?: Array<string>;
