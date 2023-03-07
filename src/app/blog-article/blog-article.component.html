@@ -4,26 +4,26 @@
 
 
       <div class="main-content">
-        <h1>{{blog.title}}</h1>
-        <h6>{{blog.author.fullName}}</h6>
+        <h1>{{blogMeta.title}}</h1>
+        <h6>{{blogMeta.author.fullName}}</h6>
         <div class="image">
-          <img src="{{blog.heroImage}}" alt="{{blog.title}}">
+          <img src="{{blogMeta.heroImage}}" alt="{{blogMeta.title}}">
         </div>
-        <div class="main-text" *ngFor="let section of blog.sections; index as i">
+        <div class="main-text" *ngFor="let section of blogBody.sections; index as i">
           <h3 id="{{section.sectionTitle}}">{{section.sectionTitle}}</h3>
           <tui-editor-socket [content]="section.sectionText"></tui-editor-socket>
           <div class="image">
             <img src="{{section.sectionMediaPath}}" alt="{{section.sectionMediaText}}">
           </div>
         </div>
-        <h4>Quote: {{blog.quotes[0]}} </h4>
-        <div>Published on {{blog.publishedDate | date:"mediumDate"}}</div>
+        <h4>Quote: {{blogBody.quotes[0]}} </h4>
+        <div>Published on {{blogMeta.publishedDate | date:"mediumDate"}}</div>
         <h5>Category:
-          <a mat-flat-button routerLink="/blogs/{{blog.category}}">{{blog.category}}</a>
+          <a mat-flat-button routerLink="/blogs/{{blogMeta.category}}">{{blogMeta.category}}</a>
         </h5>
         <p>Tags:</p>
         <mat-chip-listbox aria-label="Tags">
-          <div *ngFor="let tag of blog.blogTags">
+          <div *ngFor="let tag of blogMeta.blogTags">
             <mat-chip>{{tag}}</mat-chip>
           </div>
         </mat-chip-listbox>
@@ -31,7 +31,7 @@
 
 
         <h2>Comments</h2>
-        <mat-card *ngFor="let comment of blog.comments">
+        <mat-card *ngFor="let comment of blogBody.comments">
           <mat-card-header>
             <mat-card-title>{{comment.commentText}}</mat-card-title>
             <mat-card-subtitle class="comment-subtitle">
@@ -68,7 +68,7 @@
         </mat-menu>
 
         <mat-menu #blogContents="matMenu">
-          <div *ngFor="let section of blog.sections">
+          <div *ngFor="let section of blogBody.sections">
             <div *ngIf="section.sectionTitle !== ''">
               <button mat-menu-item routerLink="./" fragment={{section.sectionTitle}}>{{section.sectionTitle}}</button>
             </div>
@@ -86,7 +86,7 @@
 
     <div class="column">
       <div class="contents-panel">
-        <div *ngFor="let section of blog.sections">
+        <div *ngFor="let section of blogBody.sections">
           <div *ngIf="section.sectionTitle !== ''">
             <div routerLink="./" fragment={{section.sectionTitle}} class="section-links">{{section.sectionTitle}}</div>
           </div>

@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Blog } from '../blog/blog.model';
+import { BlogMeta } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
 
 @Component({
@@ -13,12 +12,12 @@ export class SearchComponent implements OnInit {
   editing = false;
   subscription: Subscription;
   searchQuery: string;
-  results: Blog[] = [];
+  results: BlogMeta[] = [];
 
   constructor(private blogService: BlogService) {}
 
   ngOnInit() {
-    this.results = this.blogService.getBlogs();
+    this.results = this.blogService.getBlogsMeta();
   }
 
   onInputChange() {

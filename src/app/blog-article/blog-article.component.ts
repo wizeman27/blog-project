@@ -6,7 +6,7 @@ import {
 } from '@angular/material/dialog';
 import { MatSnackBar,  } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Blog } from '../blog/blog.model';
+import { BlogBody, BlogMeta } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
 
 export interface DialogData {
@@ -20,7 +20,9 @@ export interface DialogData {
   styleUrls: ['./blog-article.component.css'],
 })
 export class BlogArticleComponent implements OnInit {
-  blog: Blog;
+  blogMeta: BlogMeta;
+  blogBody: BlogBody;
+  blogId: string;
   address: string;
 
   constructor(
@@ -33,8 +35,10 @@ export class BlogArticleComponent implements OnInit {
   ngOnInit(): void {
     const address = this.route.params.subscribe((params: Params) => {
       this.address = params['address'];
-      this.blog = this.blogService.getBlog(this.address);
-      console.log(JSON.stringify(this.blog));
+      this.blogMeta = this.blogService.getBlogMeta(this.address);
+      console.log(JSON.stringify(this.blogMeta));
+      this.blogId = this.blogMeta.blogId;
+      this.blogBody = this.blogService.getBlogBody(this.blogId);
     });
   }
 
@@ -50,9 +54,10 @@ export class BlogArticleComponent implements OnInit {
   }
 
   onEdit() {
+    let blogDraft = this.blogService.getBlogDraft(this.blogId);
     // if post has a draft that is more recent than published version,
-    if (this.blog.draft) {
-      if (this.blog.draft.lastSavedDate > this.blog.publishedDate) {
+    if (blogDraft) {
+      if (blogDraft.lastSavedDate > this.blogMeta.publishedDate) {
         // check if user wants to load latest draft or published version.
         this.dialog.open(EditDialog, {
           data: { address: this.address, route: this.route },
@@ -70,7 +75,7 @@ export class BlogArticleComponent implements OnInit {
   templateUrl: './delete-dialog.html',
 })
 export class DeleteDialog {
-  title:string = this.blogService.getBlog(this.data.address).title;
+  title:string = this.blogService.getBlogMeta(this.data.address).title;
 
   constructor(
     private blogService: BlogService,

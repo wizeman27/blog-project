@@ -53,3 +53,75 @@
 .editor {
   min-height: 30rem;
 }
+
+.card {
+  max-width: 500px;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+
+.giveMeEllipsisDescription {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 9em; /* fallback */
+  margin-top:.5em;
+}
+
+.giveMeEllipsisTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 1.5em; /* fallback */
+  max-height: 4.5em; /* fallback */
+  margin-right: .5em;
+  font-weight:400;
+}
+
+.post-image {
+  text-align: center;
+  width: 100%;
+}
+
+.post-image img {
+  max-width: 100%;
+  max-height: 600px;
+  box-shadow: 1px 1px 5px rgb(0,0,0,0.5);
+  cursor: pointer;
+}
+
+.description {
+  font-size: medium;
+}
+
+
+.left-side {
+  text-align: left;
+}
+.left-side a {
+  margin-right: .5em;
+  margin-right: .5em;
+}
+.panel-preview {
+  display: block;
+  margin-top: 1rem;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-bottom: 1rem;
+}
+
+mat-chip {
+  font-size: smaller;
+  background-color: blue;
+  color: white;
+}
+
+.full-preview {
+
+}

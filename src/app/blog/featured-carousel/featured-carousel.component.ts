@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Blog } from '../blog.model';
+import { BlogMeta } from '../blog.model';
 import { BlogService } from '../blog.service';
 
 @Component({
@@ -10,12 +10,12 @@ import { BlogService } from '../blog.service';
 export class FeaturedCarouselComponent implements OnInit {
   //currentIndex: number = 0;
 
-  featuredBlogs: Blog[];
+  featuredBlogs: BlogMeta[];
 
   constructor(private blogService: BlogService) {}
 
   ngOnInit(): void {
-    this.featuredBlogs = this.blogService.getFeaturedBlogs();
+    this.featuredBlogs = this.blogService.getFeaturedBlogsMeta();
   }
 
 

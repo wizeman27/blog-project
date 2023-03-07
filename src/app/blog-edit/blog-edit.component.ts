@@ -26,30 +26,13 @@ import {
 import MarkdownIt from 'markdown-it';
 //import { Converter } from 'showdown';
 import { Observable, Subject } from 'rxjs';
-import { Blog } from '../blog/blog.model';
+import { BlogBody, BlogDraft, BlogMeta } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
 import { User } from '../shared/user.model';
 import { ComponentCanDeactivate } from './pending-changes.guard';
 
 export interface BlogTag {
   name: string;
-}
-export interface BlogDraft {
-  title?: string;
-  description?: string;
-  featured?: boolean;
-  lastSavedDate?: Date;
-  address?: string;
-  category?: string;
-  sections?: Array<{
-    sectionTitle?: string;
-    sectionText?: string;
-    sectionMediaType?: string;
-    sectionMediaPath?: string;
-  }>;
-  heroImage?: string;
-  quotes?: Array<string>;
-  blogTags?: Array<string>;
 }
 
 @Injectable({
@@ -91,6 +74,7 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   // }
 
   blogHasDraft: boolean;
+  previewMode: string = '';
   address: string;
   urlSection: string;
   editMode = false;
@@ -98,12 +82,19 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   isLinear = false;
   blogRequiredFields: FormGroup;
   blogOptionalFields: FormGroup;
-  blogReview: FormGroup;
+  //blogReview: FormGroup;
   formFieldWidth: number;
   blogText: FormGroup;
   isPublished: boolean;
-  blogAuthor: User;
-  newPost: Blog;
+  blogAuthor: User = new User(
+    'Hakim Mermer',
+    'support@thekernelshop.com',
+    'hakimm'
+  );
+  //newPost: Blog;
+  newBlogMeta: BlogMeta;
+  newBlogBody: BlogBody;
+  newBlogDraft: BlogDraft; // not sure if necessary
   blogDraft: BlogDraft = {};
   newBlogFeatured: boolean;
   formIsSubmitted = false;
@@ -117,6 +108,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   protected blogCategories = ['Article', 'Essay', 'Short story', 'First draft'];
   protected blogFeaturedOptions = ['Yes', 'No'];
   protected blogMediaTypes = ['Image', 'Video', 'Audio'];
+  blogMeta: BlogMeta;
+  blogId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -130,82 +123,80 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.address = params['address'];
-
-      //console.log(this.address);
+      console.log(this.address);
       this.editMode =
         params['address'] !== null && params['address'] !== undefined;
-      //console.log(this.editMode);
+      console.log(this.editMode);
       this.urlSection = this.route.snapshot['_routerState'].url;
-      //console.log(this.urlSection);
-      //console.log(this.urlSection.split('/')[2]);
+      console.log(this.urlSection);
+      console.log(this.urlSection.split('/')[2]);
       if (this.urlSection.split('/')[2] === 'edit-draft') {
         this.draftEditMode = true;
-        //console.log(this.draftEditMode);
+        console.log(this.draftEditMode);
       }
 
+      if (this.editMode) {
+        this.blogMeta = this.blogService.getBlogMeta(this.address);
+        this.blogId = this.blogMeta.blogId;
+      }
       this.initForm();
     });
-
     this.formFieldWidth = window.innerWidth * 0.8;
-    this.blogAuthor = new User(
-      'Hakim Mermer',
-      'support@thekernelshop.com',
-      'hakimm'
-    );
+    console.log(this.formFieldWidth);
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.formFieldWidth = window.innerWidth * 0.8;
-  }
+  // this is causing an error, need to check
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event) {
+  //   this.formFieldWidth = window.innerWidth * 0.8;
+  // }
 
   private initForm() {
-    // required fields
+    // meta fields
     let blogTitle = '';
     let blogDescription = '';
     let blogFeatured = '';
-    let blogPostFeatured = '';
+    let blogPostFeatured = ''; // what is this?
     let blogAddress = '';
     let blogCategory = '';
-    // other fields
     let blogHeroImage = 'https://source.unsplash.com/';
-    let blogQuotes = new FormArray([]);
     let blogTags = new FormArray([]);
+    // other fields
+    let blogQuotes = new FormArray([]);
     let blogSections = new FormArray([]);
 
     // load saved draft if it exists (when editing latest draft)
     if (this.editMode && this.draftEditMode) {
-      const blogPost = this.blogService.getBlog(this.address);
+      const blogBody = this.blogService.getBlogBody(this.blogId);
+      const blogDraft = this.blogService.getBlogDraft(this.blogId);
+
       //console.log(blogPost.draft.title);
       if (
-        blogPost.draft.title !== undefined &&
-        blogPost.draft.title !== '' &&
-        blogPost.draft.title !== null
+        blogDraft.title !== undefined &&
+        blogDraft.title !== '' &&
+        blogDraft.title !== null
       ) {
-        blogTitle = blogPost.draft.title;
+        blogTitle = blogDraft.title;
       } else {
-        blogTitle = blogPost.title;
+        blogTitle = this.blogMeta.title;
       }
       if (
-        blogPost.draft.description !== undefined &&
-        blogPost.draft.description !== '' &&
-        blogPost.draft.description !== null
+        blogDraft.description !== undefined &&
+        blogDraft.description !== '' &&
+        blogDraft.description !== null
       ) {
-        blogDescription = blogPost.draft.description;
+        blogDescription = blogDraft.description;
       } else {
-        blogDescription = blogPost.description;
+        blogDescription = this.blogMeta.description;
       }
-      if (
-        blogPost.draft.featured !== undefined &&
-        blogPost.draft.featured !== null
-      ) {
-        if (blogPost.draft.featured) {
+      if (blogDraft.featured !== undefined && blogDraft.featured !== null) {
+        if (blogDraft.featured) {
           blogPostFeatured = 'Yes';
         } else {
           blogPostFeatured = 'No';
         }
       } else {
-        if (blogPost.featured) {
+        if (blogDraft) {
           blogPostFeatured = 'Yes';
         } else {
           blogPostFeatured = 'No';
@@ -215,44 +206,41 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       blogFeatured = this.blogFeaturedOptions[featuredIndex];
 
       if (
-        blogPost.draft.category !== undefined &&
-        blogPost.draft.category !== '' &&
-        blogPost.draft.category !== null
+        blogDraft.category !== undefined &&
+        blogDraft.category !== '' &&
+        blogDraft.category !== null
       ) {
+        const categoryIndex = this.blogCategories.indexOf(blogDraft.category);
+        blogCategory = this.blogCategories[categoryIndex];
+      } else {
         const categoryIndex = this.blogCategories.indexOf(
-          blogPost.draft.category
+          this.blogMeta.category
         );
         blogCategory = this.blogCategories[categoryIndex];
-      } else {
-        const categoryIndex = this.blogCategories.indexOf(blogPost.category);
-        blogCategory = this.blogCategories[categoryIndex];
       }
 
       if (
-        blogPost.draft.address !== undefined &&
-        blogPost.draft.address !== '' &&
-        blogPost.draft.address !== null
+        blogDraft.address !== undefined &&
+        blogDraft.address !== '' &&
+        blogDraft.address !== null
       ) {
-        blogAddress = blogPost.draft.address;
+        blogAddress = blogDraft.address;
       } else {
-        blogAddress = blogPost.address;
+        blogAddress = this.blogMeta.address;
       }
       if (
-        blogPost.draft.heroImage !== undefined &&
-        blogPost.draft.heroImage !== '' &&
-        blogPost.draft.heroImage !== null
+        blogDraft.heroImage !== undefined &&
+        blogDraft.heroImage !== '' &&
+        blogDraft.heroImage !== null
       ) {
-        blogHeroImage = blogPost.draft.heroImage;
+        blogHeroImage = blogDraft.heroImage;
       } else {
-        blogHeroImage = blogPost.heroImage;
+        blogHeroImage = this.blogMeta.heroImage;
       }
 
-      if (
-        blogPost.draft.quotes !== undefined &&
-        blogPost.draft.quotes !== null
-      ) {
-        if (blogPost.draft['quotes']) {
-          for (let quote of blogPost.draft.quotes) {
+      if (blogDraft.quotes !== undefined && blogDraft.quotes !== null) {
+        if (blogDraft['quotes']) {
+          for (let quote of blogDraft.quotes) {
             blogQuotes.push(
               new FormGroup({
                 quotes: new FormControl(quote),
@@ -261,8 +249,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           }
         }
       } else {
-        if (blogPost['quotes']) {
-          for (let quote of blogPost.quotes) {
+        if (blogBody['quotes']) {
+          for (let quote of blogBody.quotes) {
             blogQuotes.push(
               new FormGroup({
                 quotes: new FormControl(quote),
@@ -272,29 +260,23 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         }
       }
 
-      if (
-        blogPost.draft.blogTags !== undefined &&
-        blogPost.draft.blogTags !== null
-      ) {
-        if (blogPost.draft['blogTags']) {
-          for (let tag of blogPost.draft.blogTags) {
+      if (blogDraft.blogTags !== undefined && blogDraft.blogTags !== null) {
+        if (blogDraft['blogTags']) {
+          for (let tag of blogDraft.blogTags) {
             this.blogTags.push({ name: tag });
           }
         }
       } else {
-        if (blogPost['blogTags']) {
-          for (let tag of blogPost.blogTags) {
+        if (this.blogMeta['blogTags']) {
+          for (let tag of this.blogMeta.blogTags) {
             this.blogTags.push({ name: tag });
           }
         }
       }
 
-      if (
-        blogPost.draft.sections !== undefined &&
-        blogPost.draft.sections !== null
-      ) {
-        if (blogPost.draft['sections']) {
-          for (let section of blogPost.draft.sections) {
+      if (blogDraft.sections !== undefined && blogDraft.sections !== null) {
+        if (blogDraft['sections']) {
+          for (let section of blogDraft.sections) {
             blogSections.push(
               new FormGroup({
                 sectionTitle: new FormControl(section.sectionTitle),
@@ -310,8 +292,8 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           }
         }
       } else {
-        if (blogPost['sections']) {
-          for (let section of blogPost.sections) {
+        if (blogBody['sections']) {
+          for (let section of blogBody.sections) {
             blogSections.push(
               new FormGroup({
                 sectionTitle: new FormControl(section.sectionTitle),
@@ -329,14 +311,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       }
     }
 
-    // prepopulate fields
+    // prepopulate fields in edit mode
     if (this.editMode && !this.draftEditMode) {
-      const blogPost = this.blogService.getBlog(this.address);
+      const blogBody = this.blogService.getBlogBody(this.blogId);
       //console.log(blogPost.draft.title);
-      blogTitle = blogPost.title;
-      blogDescription = blogPost.description;
+      blogTitle = this.blogMeta.title;
+      blogDescription = this.blogMeta.description;
       // Display default value in select dropdown for Featured
-      if (blogPost.featured) {
+      if (this.blogMeta.featured) {
         blogPostFeatured = 'Yes';
       } else {
         blogPostFeatured = 'No';
@@ -344,12 +326,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       const featuredIndex = this.blogFeaturedOptions.indexOf(blogPostFeatured);
       blogFeatured = this.blogFeaturedOptions[featuredIndex];
       // Also Category dropdown
-      const categoryIndex = this.blogCategories.indexOf(blogPost.category);
+      const categoryIndex = this.blogCategories.indexOf(this.blogMeta.category);
       blogCategory = this.blogCategories[categoryIndex];
-      blogAddress = blogPost.address;
-      blogHeroImage = blogPost.heroImage;
-      if (blogPost['quotes']) {
-        for (let quote of blogPost.quotes) {
+      blogAddress = this.blogMeta.address;
+      blogHeroImage = this.blogMeta.heroImage;
+      if (blogBody['quotes']) {
+        for (let quote of blogBody.quotes) {
           blogQuotes.push(
             new FormGroup({
               quotes: new FormControl(quote),
@@ -357,13 +339,13 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           );
         }
       }
-      if (blogPost['blogTags']) {
-        for (let tag of blogPost.blogTags) {
+      if (this.blogMeta['blogTags']) {
+        for (let tag of this.blogMeta.blogTags) {
           this.blogTags.push({ name: tag });
         }
       }
-      if (blogPost['sections']) {
-        for (let section of blogPost.sections) {
+      if (blogBody['sections']) {
+        for (let section of blogBody.sections) {
           blogSections.push(
             new FormGroup({
               sectionTitle: new FormControl(section.sectionTitle),
@@ -419,15 +401,14 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         //console.log(value);
       });
 
-    this.blogReview = this._formBuilder.group({
-      thirdCtrl: [''],
-    });
+    // this.blogReview = this._formBuilder.group({
+
+    // });
 
     // Check if blog is already published
 
     if (this.editMode) {
-      const blogPost = this.blogService.getBlog(this.address);
-      this.isPublished = blogPost.status === 'Published';
+      this.isPublished = this.blogMeta.status === 'Published';
     } else {
       this.isPublished = false;
     }
@@ -502,9 +483,9 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     //console.log(this.blogText.value);
     //console.log(this.blogOptionalFields.value);
     //console.log(this.blogReview.value);
-    const blogPost = this.blogService.getBlog(this.address);
 
     this.onSaveOrSubmit();
+    this.blogDraft.blogId = this.blogId;
     // save changes to required fields
     if (this.blogRequiredFields.dirty) {
       if (this.blogRequiredFields.get('title').dirty) {
@@ -542,30 +523,17 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     // timestamp the draft
     this.blogDraft.lastSavedDate = new Date();
 
+    console.log(this.editMode);
+    console.log(this.isPublished);
+
     if (this.editMode) {
       if (this.isPublished) {
-        // When editing a published post, keep main fields as is, save any changes to draft field
-        this.newPost = new Blog(
-          blogPost.author,
-          blogPost.title,
-          blogPost.description,
-          blogPost.featured,
-          blogPost.publishedDate,
-          blogPost.address,
-          blogPost.category,
-          blogPost.status,
-          blogPost.sourceLanguage,
-          blogPost.sections,
-          blogPost.heroImage,
-          blogPost.quotes,
-          blogPost.comments,
-          blogPost.blogTags,
-          this.blogDraft
-        );
+        // When editing a published post, keep main fields as is, save any changes to a draft
+        this.blogService.updateBlogDraft(this.blogId, this.blogDraft);
       } else {
         // when editing a draft, we'll overwrite main fields
-        this.newPost = new Blog(
-          blogPost.author,
+        this.newBlogMeta = new BlogMeta(
+          this.blogMeta.author,
           this.blogRequiredFields.value.title,
           this.blogRequiredFields.value.description,
           this.newBlogFeatured,
@@ -573,19 +541,42 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
           this.blogRequiredFields.value.address,
           this.blogRequiredFields.value.category,
           'Draft',
-          blogPost.sourceLanguage,
-          this.blogText.value.sections,
+          this.blogMeta.sourceLanguage,
           this.blogOptionalFields.value.heroImage,
-          this.quotesToSave,
-          this.blogComments,
-          this.tagsToSave
+          this.tagsToSave,
+          this.blogMeta.blogId
         );
+        this.newBlogBody = new BlogBody(
+          this.blogMeta.blogId,
+          this.blogText.value.sections,
+          this.quotesToSave,
+          this.blogComments
+        );
+        // this.newPost = new Blog(
+        //   blogPost.author,
+        //   this.blogRequiredFields.value.title,
+        //   this.blogRequiredFields.value.description,
+        //   this.newBlogFeatured,
+        //   new Date(),
+        //   this.blogRequiredFields.value.address,
+        //   this.blogRequiredFields.value.category,
+        //   'Draft',
+        //   blogPost.sourceLanguage,
+        //   this.blogText.value.sections,
+        //   this.blogOptionalFields.value.heroImage,
+        //   this.quotesToSave,
+        //   this.blogComments,
+        //   this.tagsToSave
+        // );
+        this.blogService.updateBlogMeta(this.blogId, this.newBlogMeta);
+
+        this.blogService.updateBlogBody(this.blogId, this.newBlogBody);
       }
-      // update the post
-      this.blogService.updateBlog(this.address, this.newPost);
+      // update the post meta or body or draft
+      //this.blogService.updateBlog(this.address, this.newPost);
     } else {
       // when creating a new post, we'll overwrite main fields
-      this.newPost = new Blog(
+      this.newBlogMeta = new BlogMeta(
         // We'll get the user info from auth component or localstorage later
         this.blogAuthor,
         this.blogRequiredFields.value.title,
@@ -595,15 +586,38 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
         this.blogRequiredFields.value.address,
         this.blogRequiredFields.value.category,
         'Draft',
-        blogPost.sourceLanguage,
-        this.blogText.value.sections,
+        'en',
         this.blogOptionalFields.value.heroImage,
-        this.quotesToSave,
-        this.blogComments,
-        this.tagsToSave
+        this.tagsToSave,
+        crypto.randomUUID()
       );
+      this.newBlogBody = new BlogBody(
+        this.newBlogMeta.blogId,
+        this.blogText.value.sections,
+        this.quotesToSave,
+        this.blogComments
+      );
+
+      // this.newPost = new Blog(
+      //   // We'll get the user info from auth component or localstorage later
+      //   this.blogAuthor,
+      //   this.blogRequiredFields.value.title,
+      //   this.blogRequiredFields.value.description,
+      //   this.newBlogFeatured,
+      //   new Date(),
+      //   this.blogRequiredFields.value.address,
+      //   this.blogRequiredFields.value.category,
+      //   'Draft',
+      //   blogPost.sourceLanguage,
+      //   this.blogText.value.sections,
+      //   this.blogOptionalFields.value.heroImage,
+      //   this.quotesToSave,
+      //   this.blogComments,
+      //   this.tagsToSave
+      // );
       // create a new post
-      this.blogService.newBlog(this.newPost);
+      this.blogService.newBlogMeta(this.newBlogMeta);
+      this.blogService.newBlogBody(this.newBlogBody);
     }
     // mark form fields as pristine
     this.blogRequiredFields.markAsPristine();
@@ -618,13 +632,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       verticalPosition: 'bottom',
     });
     snackBarRef.onAction().subscribe(() => {
-      console.log('The snackbar action was triggered!');
+      console.log('Snackbar action was triggered!');
       snackBarRef.dismiss();
     });
   }
 
   onSaveOrSubmit() {
-    const blogPost = this.blogService.getBlog(this.address);
     // change featured field into boolean
     if (this.blogRequiredFields.value.featured === 'Yes') {
       this.newBlogFeatured = true;
@@ -634,15 +647,16 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     // if tags have not been edited, keep the original array
     if (this.editMode) {
       if (!this.blogOptionalFields.get('blogTags').dirty) {
-        this.tagsToSave = blogPost.blogTags;
+        this.tagsToSave = this.blogMeta.blogTags;
       }
     } else {
       this.tagsToSave = [];
     }
     // get comments if they exist
     if (this.editMode) {
-      if (blogPost.comments) {
-        this.blogComments = blogPost.comments;
+      const blogBody = this.blogService.getBlogBody(this.blogId);
+      if (blogBody.comments) {
+        this.blogComments = blogBody.comments;
       }
     }
     // format quotes before saving
@@ -650,11 +664,12 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.quotesToSave.push(quote.quotes);
     }
 
-    if (this.blogText.get('sections').dirty) {
-      for (let section of this.blogText.get('sections').value) {
-        //section.sectionTitle.value = '';
-      }
-    }
+    // if (this.blogText.get('sections').dirty) {
+    //   for (let section of this.blogText.get('sections').value) {
+    //     //section.sectionTitle.value = '';
+
+    //   }
+    // }
   }
 
   onSubmit() {
@@ -668,42 +683,83 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
     //console.log("Sections:" +JSON.stringify(this.blogText.value.sections));
     //console.log('Quotes: ' + JSON.stringify(this.blogOptionalFields.value.quotes));
     //console.log('Tags: '+ JSON.stringify(this.blogOptionalFields.value.blogTags));
-    const blogPost = this.blogService.getBlog(this.address);
-
     let sourceLangToSave: string;
 
     if (this.editMode) {
-      sourceLangToSave = blogPost.sourceLanguage;
+      sourceLangToSave = this.blogMeta.sourceLanguage;
     } else {
       sourceLangToSave = 'en';
     }
 
     this.onSaveOrSubmit();
 
-    this.newPost = new Blog(
-      // We'll get the user info from auth component or local storage later
-      this.blogAuthor,
-      this.blogRequiredFields.value.title,
-      this.blogRequiredFields.value.description,
-      this.newBlogFeatured,
-      new Date(),
-      this.blogRequiredFields.value.address,
-      this.blogRequiredFields.value.category,
-      'Published',
-      sourceLangToSave,
+    if(this.editMode) {
+      this.newBlogMeta = new BlogMeta(
+        // We'll get the user info from auth component or localstorage later
+        this.blogMeta.author,
+        this.blogRequiredFields.value.title,
+        this.blogRequiredFields.value.description,
+        this.newBlogFeatured,
+        new Date(),
+        this.blogRequiredFields.value.address,
+        this.blogRequiredFields.value.category,
+        'Published',
+        sourceLangToSave,
+        this.blogOptionalFields.value.heroImage,
+        this.tagsToSave,
+        this.blogMeta.blogId
+      );
+    } else {
+      this.newBlogMeta = new BlogMeta(
+
+        this.blogAuthor,
+        this.blogRequiredFields.value.title,
+        this.blogRequiredFields.value.description,
+        this.newBlogFeatured,
+        new Date(),
+        this.blogRequiredFields.value.address,
+        this.blogRequiredFields.value.category,
+        'Published',
+        sourceLangToSave,
+        this.blogOptionalFields.value.heroImage,
+        this.tagsToSave,
+        crypto.randomUUID(),
+      );
+    }
+
+    this.newBlogBody = new BlogBody(
+      this.newBlogMeta.blogId,
       this.blogText.value.sections,
-      this.blogOptionalFields.value.heroImage,
       this.quotesToSave,
-      this.blogComments,
-      this.tagsToSave
+      this.blogComments
     );
+
+    // this.newPost = new Blog(
+    //   // We'll get the user info from auth component or local storage later
+    //   this.blogAuthor,
+    //   this.blogRequiredFields.value.title,
+    //   this.blogRequiredFields.value.description,
+    //   this.newBlogFeatured,
+    //   new Date(),
+    //   this.blogRequiredFields.value.address,
+    //   this.blogRequiredFields.value.category,
+    //   'Published',
+    //   sourceLangToSave,
+    //   this.blogText.value.sections,
+    //   this.blogOptionalFields.value.heroImage,
+    //   this.quotesToSave,
+    //   this.blogComments,
+    //   this.tagsToSave
+    // );
 
     let snackMessage: string;
     if (this.editMode) {
-      this.blogService.updateBlog(this.address, this.newPost);
+      this.blogService.updateBlogMeta(this.blogId, this.newBlogMeta);
+      this.blogService.updateBlogBody(this.blogId, this.newBlogBody);
       snackMessage = 'Your changes have been published.';
     } else {
-      this.blogService.newBlog(this.newPost);
+      this.blogService.newBlogMeta(this.newBlogMeta);
+      this.blogService.newBlogBody(this.newBlogBody);
       snackMessage = 'Your new post has been published.';
     }
     this.formIsSubmitted = true;
@@ -729,11 +785,10 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
 
   onUnpublish() {
     // change post status to Draft
-    const blogPost = this.blogService.getBlog(this.address);
-    blogPost.status = 'Draft';
-    this.blogService.blogsChanged.next(this.blogService.getBlogs());
+    this.blogMeta.status = 'Draft';
+    this.blogService.blogsChanged.next(this.blogService.getBlogsMeta());
     this.blogService.featuredBlogsChanged.next(
-      this.blogService.getFeaturedBlogs()
+      this.blogService.getFeaturedBlogsMeta()
     );
 
     let snackBarRef = this.snackBar.open(
@@ -791,6 +846,22 @@ export class BlogEditComponent implements OnInit, ComponentCanDeactivate {
       this.blogTags[index].name = value;
     }
   }
+
+  onShowCardView() {
+    this.onSaveDraft();
+    this.previewMode = 'card';
+  }
+  onShowPanelView() {
+    this.onSaveDraft();
+    this.previewMode = 'panel';
+  }
+  onShowFullView() {
+    this.onSaveDraft();
+    this.previewMode = 'full';
+  }
+  onHidePreview() {
+    this.previewMode = '';
+  }
 }
 
 @Component({
@@ -819,9 +890,6 @@ export class DiscardDialog {
     }
     if (this.edit.blogOptionalFields) {
       this.edit.blogOptionalFields.markAsPristine();
-    }
-    if (this.edit.blogReview) {
-      this.edit.blogReview.markAsPristine();
     }
   }
 }

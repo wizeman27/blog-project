@@ -1,8 +1,7 @@
-
 <h2 class="title">{{editMode ? 'Edit Post' : 'New Post'}}</h2>
 
-<div class="blog-form">
-  <mat-stepper orientation="vertical" [linear]=false #stepper>
+<div class="blog-form" *ngIf="blogRequiredFields">
+  <mat-stepper orientation="vertical" [linear]=true #stepper>
     <!-- First section - required fields -->
     <mat-step [stepControl]="blogRequiredFields">
       <form [formGroup]="blogRequiredFields">
@@ -48,71 +47,73 @@
               <mat-option value="option" *ngFor="let option of blogFeaturedOptions"
                 [value]="option">{{option}}</mat-option>
             </mat-select>
-            <mat-hint align="start">Is this a featured blog?</mat-hint>
+            <mat-hint align="start">Is this a featured post?</mat-hint>
           </mat-form-field>
         </p>
 
         <div>
-          <button mat-button type="button" matStepperNext>Next</button>
+          <button mat-button type="button" color="primary" (click)="onSaveDraft()" matStepperNext>Save Draft</button>
         </div>
       </form>
     </mat-step>
 
     <!-- Second section - blog text in sections -->
-    <mat-step [stepControl]="blogText">
+    <mat-step [stepControl]="blogText" [optional]=true>
       <form [formGroup]="blogText">
         <ng-template matStepLabel>Add the main text here, in sections.</ng-template>
 
         <div formArrayName="sections">
-          <div *ngFor="let section of sections.controls; let i=index" [formGroupName]="i">
-            <p>
-              <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
-                <mat-label>Section title</mat-label>
-                <input matInput type="text" placeholder="Add the section title, e.g. Introduction (optional)"
-                  formControlName="sectionTitle">
-              </mat-form-field>
-            </p>
-            <p>
-              <tui-editor exampleText="" class="editor" [tools]="builtInTools" formControlName="sectionText">
-                Add the main content here.
-              </tui-editor>
-            </p>
+          <div *ngIf="sections.controls">
+            <div *ngFor="let section of sections.controls; let i=index" [formGroupName]="i">
+              <p>
+                <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
+                  <mat-label>Section title</mat-label>
+                  <input matInput type="text" placeholder="Add the section title, e.g. Introduction (optional)"
+                    formControlName="sectionTitle">
+                </mat-form-field>
+              </p>
+              <p>
+                <tui-editor exampleText="" class="editor" [tools]="builtInTools" formControlName="sectionText">
+                  Add the main content here.
+                </tui-editor>
+              </p>
 
-            <!-- <textarea matInput type="text" rows="6" placeholder="Add the main text here" formControlName="sectionText"></textarea> -->
+              <!-- <textarea matInput type="text" rows="6" placeholder="Add the main text here" formControlName="sectionText"></textarea> -->
 
-            <p>
-              <mat-form-field appearance="fill">
-                <mat-label>Media type</mat-label>
-                <mat-select formControlName="sectionMediaType">
-                  <mat-option value="option" *ngFor="let type of blogMediaTypes" [value]="type">{{type}}</mat-option>
-                </mat-select>
-                <mat-hint align="start">What type of media is this?</mat-hint>
-              </mat-form-field>
-            </p>
-            <p>
-              <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
-                <mat-label>Section media URL/path</mat-label>
-                <input matInput type="text" placeholder="Add a section media to display inline (optional)"
-                  formControlName="sectionMediaPath">
-              </mat-form-field>
-            </p>
-            <p>
-              <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
-                <mat-label>Section media text</mat-label>
-                <input matInput type="text" placeholder="Add text to display as alternative"
-                  formControlName="sectionMediaText">
-              </mat-form-field>
-            </p>
-            <p>
-              <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
-                <mat-label>Section media credits</mat-label>
-                <input matInput type="text" placeholder="Add text to display below the media"
-                  formControlName="sectionMediaCredits">
-              </mat-form-field>
-            </p>
-            <div class="remove-button">
-              <button mat-stroked-button color="accent" type="button" (click)="onRemoveSection(i)">Remove
-                section</button>
+              <p>
+                <mat-form-field appearance="fill">
+                  <mat-label>Media type</mat-label>
+                  <mat-select formControlName="sectionMediaType">
+                    <mat-option value="option" *ngFor="let type of blogMediaTypes" [value]="type">{{type}}</mat-option>
+                  </mat-select>
+                  <mat-hint align="start">What type of media is this?</mat-hint>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
+                  <mat-label>Section media URL/path</mat-label>
+                  <input matInput type="text" placeholder="Add a section media to display inline (optional)"
+                    formControlName="sectionMediaPath">
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
+                  <mat-label>Section media text</mat-label>
+                  <input matInput type="text" placeholder="Add text to display as alternative"
+                    formControlName="sectionMediaText">
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field appearance="fill" [style.width.px]="formFieldWidth">
+                  <mat-label>Section media credits</mat-label>
+                  <input matInput type="text" placeholder="Add text to display below the media"
+                    formControlName="sectionMediaCredits">
+                </mat-form-field>
+              </p>
+              <div class="remove-button">
+                <button mat-stroked-button color="accent" type="button" (click)="onRemoveSection(i)">Remove
+                  section</button>
+              </div>
             </div>
           </div>
 
@@ -127,7 +128,7 @@
     </mat-step>
 
     <!-- Third section - blog optional fields -->
-    <mat-step [stepControl]="blogOptionalFields">
+    <mat-step [stepControl]="blogOptionalFields" [optional]=true>
       <form [formGroup]="blogOptionalFields">
         <ng-template matStepLabel>Please fill out optional fields</ng-template>
 
@@ -182,26 +183,90 @@
       </form>
     </mat-step>
     <!-- Fourth section - preview post -->
-    <mat-step [stepControl]="blogReview">
-      <form [formGroup]="blogReview">
-        <ng-template matStepLabel>Preview your post</ng-template>
-        <mat-form-field appearance="fill">
-          <mat-label>Preview</mat-label>
-          <input matInput formControlName="thirdCtrl" placeholder="Will display a preview of the info collected so far"
-            [style.width.px]="formFieldWidth">
-        </mat-form-field>
+    <mat-step>
+      <ng-template matStepLabel>Preview your post</ng-template>
+      <div>
+
         <div class="blogform-buttons">
 
           <button type="button" mat-raised-button color="primary" (click)="onSaveDraft()">Save Draft</button>
 
         </div>
-        <div>
-          <button mat-button type="button" matStepperPrevious>Back</button>
-          <button mat-button type="button" matStepperNext>Next</button>
+        <div class="blogform-buttons">
+          <button type="button" mat-flat-button color="primary" (click)="onShowCardView()">Show card view</button>
+          <button type="button" mat-flat-button color="primary" (click)="onShowPanelView()">Show panel view</button>
+          <button type="button" mat-flat-button color="primary" (click)="onShowFullView()">Show full page view</button>
         </div>
-      </form>
+        <div *ngIf="previewMode !== ''">
+          <div class="blogform-buttons">
+            <div *ngIf="previewMode === 'card'">
+              <h3>Card view</h3>
+              <mat-card class="card">
+                <mat-card-header>
+                  <div>
+                    <mat-card-title-group>
+                      <mat-card-title class="giveMeEllipsisTitle">{{ blogMeta.title }}</mat-card-title>
+                      <mat-card-subtitle>{{ blogMeta.author.fullName }}</mat-card-subtitle>
+                      <img mat-card-md-image src="{{ blogMeta.heroImage }}" alt="{{ blogMeta.title }}">
+                    </mat-card-title-group>
+                  </div>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="giveMeEllipsisDescription">
+                    {{ blogMeta.description }}
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div *ngIf="previewMode === 'panel'">
+              <h3>Panel view</h3>
+              <mat-accordion class="panel-preview">
+                <mat-expansion-panel [expanded]="true">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <h3>{{blogMeta.title}}</h3>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div class="post-image">
+                    <img src="{{blogMeta.heroImage}}" alt="{{blogMeta.title}}" routerLink="{{blogMeta.address}}">
+                  </div>
+                  <p class="description">{{blogMeta.description}}</p>
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <hr>
+                    <p>Tags</p>
+                    <div class="left-side">
+                      <mat-chip-listbox aria-label="Tags">
+                        <div *ngFor="let tag of blogMeta.blogTags">
+                          <mat-chip>{{tag}}</mat-chip>
+                        </div>
+                      </mat-chip-listbox>
+                    </div>
+                  </div>
+                  <mat-action-row>
+                    <a mat-flat-button color="primary" routerLink="{{blogMeta.address}}">Read the full article</a>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+            <div *ngIf="previewMode === 'full'">
+              <h3>Full page view</h3>
+              <div class="full-preview">
+                <app-blog-article></app-blog-article>
+              </div>
+            </div>
+
+          </div>
+          <button type="button" mat-flat-button color="primary" (click)="onHidePreview()">Hide preview</button>
+        </div>
+
+      </div>
+
+      <div>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+        <button mat-button type="button" matStepperNext>Next</button>
+      </div>
     </mat-step>
-    <!-- Maybe move the Publish button to this section? -->
+    <!-- Move Publish button to this section? -->
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
       <p>You are now done.</p>

@@ -4,7 +4,6 @@ import { AllBlogsComponent } from './all-blogs/all-blogs.component';
 import { AuthComponent } from './auth/auth.component';
 import { UserProfileComponent } from './auth/user-profile/user-profile.component';
 import { BlogArticleComponent } from './blog-article/blog-article.component';
-import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { BlogEditComponent } from './blog-edit/blog-edit.component';
 import { PendingChangesGuard } from './blog-edit/pending-changes.guard';
 import { BlogComponent } from './blog/blog.component';

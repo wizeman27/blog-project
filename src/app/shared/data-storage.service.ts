@@ -11,9 +11,14 @@ export class DataStorageService {
   constructor(private blogService: BlogService, private http: HttpClient) {}
 
   storePosts() {
-    const blogs = this.blogService.getAllBlogs();
+    const blogsMeta = this.blogService.getAllBlogsMeta();
+    const blogsBody = this.blogService.getAllBlogsBody();
 
-    this.http.put(this.dbUrl + '/blogs.json', blogs).subscribe((response) => {
+
+    this.http.put(this.dbUrl + '/blogsMeta.json', blogsMeta).subscribe((response) => {
+      console.log(response);
+    });
+    this.http.put(this.dbUrl + '/blogsBody.json', blogsBody).subscribe((response) => {
       console.log(response);
     });
   }

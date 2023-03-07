@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Blog } from '../blog/blog.model';
+import { Blog, BlogMeta } from '../blog/blog.model';
 import { BlogService } from '../blog/blog.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class AllBlogsComponent implements OnInit {
   urlSection: string;
   category: string;
 
-  allBlogs: Blog[];
+  allBlogs: BlogMeta[];
 
   constructor(
     private blogService: BlogService,
@@ -40,11 +40,11 @@ export class AllBlogsComponent implements OnInit {
       }
 
       if (this.featuredMode) {
-        this.allBlogs = this.blogService.getFeaturedBlogs();
+        this.allBlogs = this.blogService.getFeaturedBlogsMeta();
       } else if (this.categoryMode) {
         this.allBlogs = this.blogService.getBlogsByCategory(this.category);
       } else {
-        this.allBlogs = this.blogService.getBlogs();
+        this.allBlogs = this.blogService.getBlogsMeta();
       }
     });
   }

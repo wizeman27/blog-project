@@ -28,7 +28,6 @@ import { FooterComponent } from './footer/footer.component';
 import { HeroBannerComponent } from './blog/hero-banner/hero-banner.component';
 import { BlogComponent } from './blog/blog.component';
 import { BlogListComponent } from './blog/blog-list/blog-list.component';
-import { BlogCategoryComponent } from './blog-category/blog-category.component';
 import { FeaturedCarouselComponent } from './blog/featured-carousel/featured-carousel.component';
 import {
   BlogArticleComponent,
@@ -55,7 +54,6 @@ import { HttpClientModule } from '@angular/common/http';
     HeroBannerComponent,
     BlogComponent,
     BlogListComponent,
-    BlogCategoryComponent,
     FeaturedCarouselComponent,
     BlogArticleComponent,
     AuthComponent,

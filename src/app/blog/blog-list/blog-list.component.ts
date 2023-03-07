@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { Subscription } from 'rxjs';
-import { Blog } from '../blog.model';
+import { Blog, BlogMeta } from '../blog.model';
 import { BlogService } from '../blog.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { BlogService } from '../blog.service';
   styleUrls: ['./blog-list.component.css'],
 })
 export class BlogListComponent implements OnInit {
-  blogs: Blog[];
+  blogs: BlogMeta[];
   subscription: Subscription;
   isSelected: boolean = false;
   activeTags: string[] = [];
@@ -22,10 +22,10 @@ export class BlogListComponent implements OnInit {
   constructor(private blogService: BlogService) {}
 
   ngOnInit() {
-    this.blogs = this.blogService.getBlogs();
+    this.blogs = this.blogService.getBlogsMeta();
     this.tagsList= Array.from(this.blogService.getTags()).slice(0, 7);
     this.subscription = this.blogService.blogsChanged.subscribe(
-      (blogs : Blog[]) => {
+      (blogs : BlogMeta[]) => {
         this.blogs = blogs;
       }
     );
@@ -52,14 +52,14 @@ export class BlogListComponent implements OnInit {
     if(this.activeTags.length > 0) {
       this.blogs = this.blogService.getBlogsByTags(this.activeTags);
     } else {
-      this.blogs = this.blogService.getBlogs();
+      this.blogs = this.blogService.getBlogsMeta();
     }
     //this.isSelected = !this.isSelected;
   }
 
   onClearFilters() {
     this.activeTags = [];
-    this.blogs = this.blogService.getBlogs();
+    this.blogs = this.blogService.getBlogsMeta();
     //this.isSelected = false;
   }
 }
